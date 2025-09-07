@@ -17,7 +17,7 @@
         <div class="post-header">
             <div class="user-avatar glow-animation">م</div>
             <div class="post-info">
-                <h6>محمد أحمد</h6>
+                <h6> أحمد</h6>
             </div>
         </div>
 
