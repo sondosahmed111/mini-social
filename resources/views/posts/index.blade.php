@@ -2,211 +2,110 @@
 
 @section('title', 'المنشورات - Mini Social')
 
-@section('content')
-    <!-- قسم البطل -->
-    <div class="hero-section glass-card float-animation">
-        <h1 class="display-4 fw-bold mb-3 glow-text animate__animated animate__fadeInDown">مرحبًا بك في MiniSocial</h1>
-        <p class="lead mb-4 animate__animated animate__fadeInUp">منصة التواصل الاجتماعي العربية المستقبلية</p>
-        <div class="animate__animated animate__fadeIn">
-            <a href="/register" class="neo-btn me-2">انضم إلينا</a>
-            <a href="/login" class="neo-btn" style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid var(--glass-border);">تسجيل الدخول</a>
-        </div>
-    </div>
+@push('styles')
+<style>
+.post-image img {
+    max-height: 400px;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
 
-    <!-- بوست 1 -->
-    <div class="glass-card fade-in">
-        <div class="card-body p-4">
-            <div class="d-flex align-items-center mb-3">
-                <div class="user-avatar glow-animation">م</div>
-                <div>
-                    <h6 class="mb-0">محمد أحمد</h6>
-                    <small class="text-muted">منذ 3 ساعات</small>
-                </div>
-            </div>
-            <h5>عنوان المنشور الأول</h5>
-            <p>هذا مثال لمنشور. يمكن للمستخدمين الإعجاب والتعليق ومشاركة المنشورات هنا.</p>
+.hover-shadow:hover {
+    transform: scale(1.02);
+    cursor: pointer;
+}
 
-            <div class="post-actions">
-                <button class="neo-btn like-btn">
-                    <i class="bi bi-heart me-1"></i>إعجاب <span class="like-count">0</span>
-                </button>
-                <button class="neo-btn toggle-comments" data-bs-toggle="modal" data-bs-target="#commentsModal1">
-                    تعليقات <span class="comment-count">0</span>
-                </button>
-            </div>
-        </div>
-    </div>
+.modal-body img {
+    max-height: 80vh;
+    width: 100%;
+    object-fit: contain;
+}
 
-    <!-- بوست 2 -->
-    <div class="glass-card fade-in">
-        <div class="card-body p-4">
-            <div class="d-flex align-items-center mb-3">
-                <div class="user-avatar glow-animation">س</div>
-                <div>
-                    <h6 class="mb-0">سارة محمد</h6>
-                    <small class="text-muted">منذ 6 ساعات</small>
-                </div>
-            </div>
-            <h5>عنوان منشور ثاني</h5>
-            <p>منشور مثال آخر. يمكنك إضافة المزيد من المنشورات ديناميكيًا لاحقًا.</p>
-
-            <div class="post-actions">
-                <button class="neo-btn like-btn">
-                    <i class="bi bi-heart me-1"></i>إعجاب <span class="like-count">0</span>
-                </button>
-                <button class="neo-btn toggle-comments" data-bs-toggle="modal" data-bs-target="#commentsModal2">
-                    تعليقات <span class="comment-count">0</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for Comments 1 -->
-    <div class="modal fade" id="commentsModal1" tabindex="-1" aria-labelledby="commentsModal1Label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content glass-card">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="commentsModal1Label">التعليقات</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-group list-group-flush comment-list mb-2"></ul>
-                    <div class="input-group mt-3">
-                        <input type="text" class="form-control comment-text" placeholder="اكتب تعليقًا...">
-                        <button class="neo-btn add-comment">إرسال</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for Comments 2 -->
-    <div class="modal fade" id="commentsModal2" tabindex="-1" aria-labelledby="commentsModal2Label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content glass-card">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="commentsModal2Label">التعليقات</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-group list-group-flush comment-list mb-2"></ul>
-                    <div class="input-group mt-3">
-                        <input type="text" class="form-control comment-text" placeholder="اكتب تعليقًا...">
-                        <button class="neo-btn add-comment">إرسال</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-
-@push('scripts')
-<script>
-    // تهيئة جسيمات الخلفية
-    document.addEventListener('DOMContentLoaded', function() {
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: "#4a6cfa" },
-                shape: { type: "circle" },
-                opacity: { value: 0.5, random: true },
-                size: { value: 3, random: true },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: "#4a6cfa",
-                    opacity: 0.4,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: "none",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false
-                }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: true, mode: "repulse" },
-                    onclick: { enable: true, mode: "push" },
-                    resize: true
-                }
-            },
-            retina_detect: true
-        });
-
-        // تأثيرات التمرير
-        const fadeElements = document.querySelectorAll('.fade-in');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        fadeElements.forEach(el => observer.observe(el));
-
-        // تفعيل أزرار الإعجاب
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const countSpan = btn.querySelector('.like-count');
-                countSpan.textContent = parseInt(countSpan.textContent) + 1;
-
-                // تأثير مرئي للإعجاب
-                btn.style.background = 'linear-gradient(145deg, rgba(220, 53, 69, 0.8), rgba(255, 193, 7, 0.8))';
-                setTimeout(() => {
-                    btn.style.background = '';
-                }, 500);
-            });
-        });
-
-        // إضافة تعليقات جديدة
-        document.querySelectorAll('.add-comment').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const input = btn.previousElementSibling;
-                const text = input.value.trim();
-                if(text === '') return;
-
-                const commentList = btn.closest('.modal-body').querySelector('.comment-list');
-                const li = document.createElement('li');
-                li.className = 'list-group-item comment-item bg-transparent border-0';
-                li.innerHTML = `
-                    <div class="d-flex align-items-start">
-                        <div class="user-avatar me-2" style="width: 35px; height: 35px; font-size: 0.9rem;">أ</div>
-                        <div>
-                            <strong>أنت</strong>
-                            <p class="mb-0">${text}</p>
-                            <small class="text-muted">الآن</small>
-                        </div>
-                    </div>
-                `;
-                commentList.appendChild(li);
-                input.value = '';
-
-                // تحديث عدد التعليقات
-                const countSpan = document.querySelector('.comment-count');
-                if (countSpan) {
-                    countSpan.textContent = parseInt(countSpan.textContent) + 1;
-                }
-
-                // تأثير عند الإضافة
-                li.classList.add('animate__animated', 'animate__fadeIn');
-            });
-        });
-
-        // تفعيل النقر على اسم المستخدم
-        document.querySelectorAll('.user-avatar, .username').forEach(el => {
-            el.style.cursor = 'pointer';
-            el.addEventListener('click', () => {
-                const username = el.closest('.glass-card').querySelector('h6').textContent;
-                alert(`هنا يمكنك الذهاب إلى صفحة الملف الشخصي لـ: ${username}`);
-            });
-        });
-    });
-</script>
+.glass-card .modal-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+</style>
 @endpush
+
+@section('content')
+<div class="container">
+    @auth
+        <div class="text-center mb-4">
+            <a href="{{ route('posts.create') }}" class="neo-btn">إنشاء منشور جديد</a>
+        </div>
+    @endauth
+
+    @guest
+        <div class="hero-section glass-card float-animation mb-4">
+            <h1 class="display-4 fw-bold mb-3 glow-text animate__animated animate__fadeInDown">مرحبًا بك في MiniSocial</h1>
+            <p class="lead mb-4 animate__animated animate__fadeInUp">منصة التواصل الاجتماعي العربية المستقبلية</p>
+            <div class="animate__animated animate__fadeIn">
+                <a href="/register" class="neo-btn me-2">انضم إلينا</a>
+                <a href="/login" class="neo-btn" style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid var(--glass-border);">تسجيل الدخول</a>
+            </div>
+        </div>
+    @endguest
+
+    @forelse ($posts as $post)
+        <div class="glass-card fade-in mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="user-avatar glow-animation">{{ substr($post->user->name ?? 'م', 0, 1) }}</div>
+                    <div>
+                        <h6 class="mb-0">{{ $post->user->name ?? 'مستخدم' }}</h6>
+                        <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
+                    </div>
+                    @if(auth()->check() && auth()->id() === $post->user_id)
+                        <div class="ms-auto">
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a href="{{ route('posts.edit', $post->id) }}" class="dropdown-item">
+                                            <i class="bi bi-pencil me-2"></i>تعديل
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذا المنشور؟')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-trash me-2"></i>حذف
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                <h5>{{ $post->title }}</h5>
+                <p>{{ $post->description }}</p>
+                @if($post->image)
+                    <div class="post-image mb-3">
+                        <img src="{{ asset('storage/' . $post->image) }}" alt="صورة المنشور" class="img-fluid rounded" loading="lazy">
+                    </div>
+                @endif
+                <div class="post-actions">
+                    <button class="neo-btn like-btn">
+                        <i class="bi bi-heart me-1"></i>إعجاب <span class="like-count">{{ $post->likes_count ?? 0 }}</span>
+                    </button>
+                    <button class="neo-btn toggle-comments" data-bs-toggle="modal" data-bs-target="#comments-{{ $post->id }}">
+                        تعليقات <span class="comment-count">{{ $post->comments_count ?? 0 }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    @empty
+        <div class="text-center">
+            <p>لا توجد منشورات حالياً</p>
+        </div>
+    @endforelse
+               
+    
+@endsection
