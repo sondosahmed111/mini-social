@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+
 // ----------------------
 // Home Page (Public)
 // ----------------------
@@ -12,13 +13,21 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+
 // ----------------------
 // Authenticated Users Routes
 // ----------------------
 Route::middleware('auth')->group(function () {
 
     // Posts page
-    Route::get('/posts', [PostController::class, 'showPosts'])->name('posts');
+    Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
+    route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
+    route::post('/posts',[PostController::class,'store'])->name('posts.store');
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('posts/show', [PostController::class,'show'])->name('posts.show');
+    Route::get('/posts/{post}/edit', [PostController::class,'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class,'update'])->name('posts.update');
+    route::delete('/posts/{post}', [PostController::class,'destroy'])->name('posts.destroy');
 
     // Redirect /profile to the authenticated user's profile
     Route::get('/profile', function () {
