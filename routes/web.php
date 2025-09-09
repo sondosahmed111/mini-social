@@ -15,7 +15,7 @@ Route::get('/', function () {
 
 
 // ----------------------
-// Authenticated Users Routes
+// Authenticated Users Route
 // ----------------------
 Route::middleware('auth')->group(function () {
 
