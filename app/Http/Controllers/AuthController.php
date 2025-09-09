@@ -74,7 +74,7 @@ class AuthController extends Controller
                 Cookie::queue(Cookie::forget('remembered_email'));
             }
 
-            return redirect()->route('posts');
+            return redirect()->route('posts.index');
         }
 
         return back()->withErrors([

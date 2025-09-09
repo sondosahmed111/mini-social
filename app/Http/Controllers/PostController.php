@@ -43,7 +43,7 @@ class PostController extends Controller
     {
 
         $users = User::all();
-        return view('posts.create', ['users'=> $users, 'post'=> $post]);
+        return view('posts.edit', ['users'=> $users, 'post'=> $post]);
     }
     public function update($postId)
     {
