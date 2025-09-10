@@ -33,9 +33,9 @@
                             @endif
                         </div>
 
-                        @if(Auth::id() == $user->id)
+                        @if(Auth::id())
                             <div class="d-flex gap-2">
-                                <a href="{{ route('profile.edit', $user->id) }}" class="neo-btn">
+                                <a href="{{ route('profile.edit') }}" class="neo-btn">
                                     <i class="bi bi-pencil"></i> تعديل الملف
                                 </a>
                                 <a href="{{ route('posts.create') }}" class="neo-btn">

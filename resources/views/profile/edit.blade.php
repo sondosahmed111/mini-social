@@ -24,7 +24,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -71,7 +71,7 @@
                             <button type="submit" class="neo-btn">
                                 <i class="bi bi-save"></i> حفظ التعديلات
                             </button>
-                            <a href="{{ route('profile.view', $user->id) }}" class="btn btn-secondary ms-2">إلغاء</a>
+                            <a href="{{ route('profile.show', $user->id) }}" class="btn btn-secondary ms-2">إلغاء</a>
                         </div>
                     </div>
                 </div>
