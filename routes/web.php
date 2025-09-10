@@ -4,30 +4,31 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Post;
+use App\Http\Controllers\CommentController;
 
 
 // ----------------------
 // Home Page (Public)
 // ----------------------
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+// Route::get('/', function () {
+//     return view('posts.index');
+// })->name('home');
 
-
-// ----------------------
+// Route::get('/', [PostController::class, 'index'])->name('home');
+// Route::get('/home', [PostController::class, 'index']);
+// // ----------------------
 // Authenticated Users Routes
 // ----------------------
 Route::middleware('auth')->group(function () {
-
     // Posts page
     Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
-    route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
-    route::post('/posts',[PostController::class,'store'])->name('posts.store');
-    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    Route::get('posts/show', [PostController::class,'show'])->name('posts.show');
-    Route::get('/posts/{post}/edit', [PostController::class,'edit'])->name('posts.edit');
-    Route::put('/posts/{post}', [PostController::class,'update'])->name('posts.update');
-    route::delete('/posts/{post}', [PostController::class,'destroy'])->name('posts.destroy');
+    route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('posts/show', [PostController::class, 'show'])->name('posts.show');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
     // Redirect /profile to the authenticated user's profile
     Route::get('/profile', function () {
@@ -53,6 +54,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // ----------------------
+    // Comment Routes
+    // ----------------------
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+
+    // ----------------------
     // Profile Routes (Protected)
     // ----------------------
     Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
@@ -60,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/{id}/delete-image', [ProfileController::class, 'destroyImage'])->name('profile.destroyImage');
 });
+Route::get('/', [PostController::class, 'index'])->name('posts.index');
+
 
 // ----------------------
 // Guest Users Routes

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -66,15 +67,15 @@ class AuthController extends Controller
 
             // Handle remember me functionality
             if ($remember) {
-                                                                                    // Create a cookie to remember email for 30 days
+                // Create a cookie to remember email for 30 days
                 $cookie = Cookie::make('remembered_email', $request->email, 43200); // 30 days
-                return redirect()->route('posts')->withCookie($cookie);
+                return redirect()->route('posts.index')->withCookie($cookie);
             } else {
                 // Remove cookie if user did not select "remember me"
                 Cookie::queue(Cookie::forget('remembered_email'));
             }
 
-            return redirect()->route('posts');
+            return redirect()->route('posts.index');
         }
 
         return back()->withErrors([

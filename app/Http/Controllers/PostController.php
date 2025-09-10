@@ -5,85 +5,95 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+
 class PostController extends Controller
 {
+    // عرض كل البوستات
     public function index()
     {
-        $PostsfromDB = Post::all(); 
-        return view('posts.index',['posts'=>$PostsfromDB]);
+        $PostsfromDB = Post::with(['user', 'comments.user'])->latest()->get();
+
+        return view('posts.index', ['posts' => $PostsfromDB]);
     }
+
+
+    // صفحة إنشاء بوست جديد
     public function create()
     {
         $users = User::all();
-        return view('posts.create', ['users'=> $users]);
+        return view('posts.create', ['users' => $users]);
     }
+
     public function store(Request $request)
     {
-        // $request= request();
-        // dd($request->title,$request->all());
-        $data = request()->all();
-        $title = request()->title;
-        $description = request()->description;
-        $image = request()->image;
-        // dd($title, $description, $image);
-        // $Post = new Post;
-        // $Post->title = $title;
-        // $Post->description = $description;
-        // $Post->image = $image;
-        // $Post->save();
-        Post::create([
-            'title' => $title,
-            'description' => $description,
-            'image' => $image
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-    return redirect()->route('posts.index')->with('success', 'Post created successfully!');
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('posts', 'public');
+        }
+
+        Post::create([
+            'title'       => $request->title,
+            'description' => $request->description,
+            'image'       => $imagePath,
+            'user_id'     => auth()->id(),
+        ]);
+
+        return redirect()->route('posts.index')->with('success', 'تم إنشاء المنشور بنجاح ✅');
     }
+
     public function edit(Post $post)
     {
-
         $users = User::all();
-        return view('posts.create', ['users'=> $users, 'post'=> $post]);
+        return view('posts.edit', ['users' => $users, 'post' => $post]);
     }
-    public function update($postId)
+
+    public function update(Request $request, Post $post)
     {
-        $singlePostfromDB = Post::findOrFail($postId);
-        // $request= request();
-        // dd($request->title,$request->all());
-        $data = request()->all();
-        $title = request()->title;
-        $description = request()->description;
-        $image = request()->image;
-        // dd($title, $description, $image);
-        $singlePostfromDB->update([
-            'title' => $title,
-            'description' => $description,
-            'image' => $image
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
-        return to_route('posts.show', ['post' => $postId]);
+
+        $imagePath = $post->image;
+
+        if ($request->hasFile('image')) {
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+            $imagePath = $request->file('image')->store('posts', 'public');
+        }
+
+        $post->update([
+            'title'       => $request->title,
+            'description' => $request->description,
+            'image'       => $imagePath,
+        ]);
+
+        return redirect()->route('posts.show', $post->id)->with('success', 'تم تعديل المنشور بنجاح ✏️');
     }
-    public function destroy($postId)
+
+    public function destroy(Post $post)
     {
-        $post = Post::findOrFail($postId);
+        if ($post->image) {
+            Storage::disk('public')->delete($post->image);
+        }
+
         $post->delete();
 
-
-        return to_route('posts.index');
-
+        return redirect()->route('posts.index')->with('success', 'تم حذف المنشور 🗑️');
     }
+
     public function show(Post $post)
     {
-        // $singlePostfromDB = Post::find($postId);//for id search
-
-    //  $singlePostfromDB = Post::findOrFail($postId); // This returns a single model instance
-    // //  if(is_null($singlePostfromDB)){
-    //     return to_route('posts.index');
-     return view('posts.show',['post'=>$post] );
-
-
+        return view('posts.show', ['post' => $post]);
     }
-
-    
-
-   
 }
