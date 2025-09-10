@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     //user's acount
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');  
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.view');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/delete-image', [ProfileController::class, 'destroyImage'])->name('profile.destroyImage');
 
