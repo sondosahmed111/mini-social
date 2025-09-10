@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReactionController;
 
 // ----------------------
 // Home Page (Public)
@@ -64,3 +65,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register.view');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
+//reactions
+ Route::post('/reaction/toggle', [ReactionController::class, 'toggle'])
+        ->name('reaction.toggle');
