@@ -52,7 +52,9 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $users = User::all();
+
         return view('posts.edit', ['users' => $users, 'post' => $post]);
+
     }
 
     public function update(Request $request, Post $post)

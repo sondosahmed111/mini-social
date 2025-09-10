@@ -3,19 +3,29 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
-        DB::table('users')->insert([
-            'name' => 'Abdallah',
-            'email' => 'abdalla@example.com',
-            'password' => Hash::make('password123'),
-            'created_at' => now(),
-            'updated_at' => now(),
+        //users
+        User::create([
+            'name' => 'Menna Ahmed',
+            'username' => 'menna123',
+            'email' => 'menna@example.com',
+            'password' => Hash::make('Password@123'),
+        ]);
+
+        User::create([
+            'name' => 'Nada Mohamed',
+            'username' => 'Nada123',
+            'email' => 'nada@example.com',
+            'password' => Hash::make('Password@123'),
         ]);
     }
 }
