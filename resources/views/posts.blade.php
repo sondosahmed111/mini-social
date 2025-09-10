@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const postId = this.dataset.postId;
             const likeCount = this.querySelector('.like-count');
             const icon = this.querySelector('i');
-            
+
             if (this.classList.contains('liked')) {
                 likeCount.textContent = parseInt(likeCount.textContent) - 1;
                 this.classList.remove('liked');
@@ -123,11 +123,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const postId = this.dataset.postId;
             const input = document.querySelector(`.comment-input[data-post-id="${postId}"]`);
             const text = input.value.trim();
-            
+
             if(text !== ''){
                 const commentsSection = this.closest('.comments-section');
                 const ul = commentsSection.querySelector('ul');
-                
+
                 const li = document.createElement('li');
                 li.className = 'list-group-item bg-transparent mb-2 rounded comment-item';
                 li.innerHTML = `
@@ -141,13 +141,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 ul.appendChild(li);
                 input.value = '';
-                
+
                 // تحديث عدد التعليقات
                 const commentCount = this.closest('.glass-card').querySelector('.comment-count');
                 commentCount.textContent = parseInt(commentCount.textContent) + 1;
             }
         });
-    });
+    })
 
     // تفعيل إدخال التعليقات بالضغط على Enter
     document.querySelectorAll('.comment-input').forEach(input => {

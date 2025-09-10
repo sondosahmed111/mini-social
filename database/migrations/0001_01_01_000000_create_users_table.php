@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('profile_image')->default('default.png');
+            
             $table->text('bio')->nullable();
             $table->rememberToken();
             $table->timestamps();

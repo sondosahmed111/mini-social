@@ -3,6 +3,7 @@
 @section('title', 'البحث - Mini Social')
 
 @section('content')
+
 <div class="d-flex justify-content-center align-items-center" 
      style="min-height: calc(100vh - 80px);"> <!-- 80px عشان يسيب مسافة من الناف بار -->
     
@@ -65,5 +66,6 @@
             @endif
         </div>
     </div>
+
 </div>
 @endsection
