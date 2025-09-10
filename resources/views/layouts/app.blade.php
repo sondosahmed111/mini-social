@@ -868,8 +868,7 @@
     </div>
     <div class="nav-icons">
         <div class="nav-icon" onclick="toggleDarkMode()"><i class="bi bi-moon"></i></div>
-        <div class="nav-icon"><i class="bi bi-search"></i></div>
-        <div class="nav-icon"><i class="bi bi-chat"></i></div>
+        <div class="nav-icon"><a href="/search"><i class="bi bi-search"></i></a></div>
     </div>
 </header>
 

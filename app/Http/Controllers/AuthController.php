@@ -68,7 +68,7 @@ class AuthController extends Controller
             if ($remember) {
                                                                                     // Create a cookie to remember email for 30 days
                 $cookie = Cookie::make('remembered_email', $request->email, 43200); // 30 days
-                return redirect()->route('posts')->withCookie($cookie);
+                return redirect()->route('posts.index')->withCookie($cookie);
             } else {
                 // Remove cookie if user did not select "remember me"
                 Cookie::queue(Cookie::forget('remembered_email'));

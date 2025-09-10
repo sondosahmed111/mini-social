@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -8,60 +9,56 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    // Show a user's profile along with their posts
-    public function show($id)
+    // Show authenticated user's profile with posts
+    public function show()
+    {
+        $user = User::with(['posts' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->findOrFail(Auth::id());
+
+        return view('profile.show', compact('user'));
+    }
+
+    // View other user's profile
+    public function view($id)
     {
         $user = User::with(['posts' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }])->findOrFail($id);
 
-        return view('profile.show', compact('user'));
+        return view('profile.view', compact('user'));
     }
 
-    // Show the edit profile form
-    public function edit($id)
+    // Show edit profile form (for logged-in user only)
+    public function edit()
     {
-        // Check if the logged-in user is trying to edit their own profile
-        if (Auth::id() != $id) {
-            return redirect()->route('profile.show', $id)
-                ->with('error', 'You are not authorized to edit this profile');
-        }
-
-        $user = User::findOrFail($id);
+        $user = Auth::user();
         return view('profile.edit', compact('user'));
     }
 
-    // Handle profile update
-    public function update(Request $request, $id)
+    // Update profile (for logged-in user only)
+    public function update(Request $request)
     {
-        // Check if the logged-in user is trying to update their own profile
-        if (Auth::id() != $id) {
-            return redirect()->route('profile.show', $id)
-                ->with('error', 'You are not authorized to update this profile');
-        }
-
-        $user = User::findOrFail($id);
+        $user = Auth::user();
 
         $request->validate([
             'name'          => 'required|string|max:255',
             'username'      => 'required|string|max:255|unique:users,username,' . $user->id,
             'email'         => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'bio'           => 'nullable|string|max:500',
-            'profile_image' => 'nullable|image|max:2048',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         // Handle profile image upload
         if ($request->hasFile('profile_image')) {
-            // Delete old image if it's not the default
             if ($user->profile_image && $user->profile_image !== 'default.png') {
                 Storage::disk('public')->delete('profiles/' . $user->profile_image);
             }
 
-            $imagePath           = $request->file('profile_image')->store('profiles', 'public');
+            $imagePath = $request->file('profile_image')->store('profiles', 'public');
             $user->profile_image = basename($imagePath);
         }
 
-        // Update user details
         $user->update([
             'name'          => $request->name,
             'username'      => $request->username,
@@ -70,19 +67,14 @@ class ProfileController extends Controller
             'profile_image' => $user->profile_image,
         ]);
 
-        return redirect()->route('profile.show', $user->id)
-            ->with('success', 'Profile updated successfully');
+        return redirect()->route('profile.show')
+            ->with('success', 'تم تحديث البروفايل بنجاح ');
     }
 
-    // Delete the user's profile image
-    public function destroyImage($id)
+    // Delete profile image (reset to default)
+    public function destroyImage()
     {
-        // Check if the logged-in user is authorized
-        if (Auth::id() != $id) {
-            return response()->json(['error' => 'You are not authorized to perform this action'], 403);
-        }
-
-        $user = User::findOrFail($id);
+        $user = Auth::user();
 
         if ($user->profile_image && $user->profile_image !== 'default.png') {
             Storage::disk('public')->delete('profiles/' . $user->profile_image);
@@ -90,6 +82,6 @@ class ProfileController extends Controller
             $user->save();
         }
 
-        return response()->json(['success' => 'Profile image deleted successfully']);
+        return response()->json(['success' => 'تم حذف الصورة ']);
     }
 }

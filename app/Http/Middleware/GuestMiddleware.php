@@ -16,7 +16,7 @@ class GuestMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (session('user')) {
-            return to_route('posts');
+            return to_route('posts.index');
         }
         return $next($request);
     }
