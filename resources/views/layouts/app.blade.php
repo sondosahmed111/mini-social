@@ -355,6 +355,9 @@
             transform: scale(1.4) translateY(-8px);
         }
 
+        /*منشور جديد*/
+       
+
         /* تخصيص ألوان الريأكتات */
         .like { color: #1877F2; }
         .love { color: #F3425F; }
@@ -483,99 +486,6 @@
         }
 
         /* إنشاء منشور جديد */
-        .create-post-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15), 
-                        inset 0 0 0 1px rgba(255, 255, 255, 0.7);
-            overflow: hidden;
-            transition: var(--transition);
-            margin-bottom: 25px;
-            padding: 20px;
-        }
-
-        .post-input {
-            width: 100%;
-            border: none;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 15px;
-            resize: none;
-            min-height: 100px;
-            font-family: inherit;
-            font-size: 15px;
-        }
-
-        .post-input:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        .media-preview {
-            margin-bottom: 15px;
-            border-radius: 12px;
-            overflow: hidden;
-            display: none;
-        }
-
-        .media-preview img, .media-preview video {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-        }
-
-        .media-actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .media-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 15px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .media-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
-        }
-
-        .media-btn i {
-            margin-left: 5px;
-        }
-
-        .post-submit {
-            background: linear-gradient(145deg, var(--primary-glow), var(--secondary-glow));
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: block;
-            margin-left: auto;
-            box-shadow: 0 5px 15px rgba(74, 108, 250, 0.3);
-        }
-
-        .post-submit:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 108, 250, 0.4);
-        }
 
         /* القائمة الجانبية */
         .sidebar {
