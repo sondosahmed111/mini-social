@@ -33,4 +33,9 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class);
     }
+    // app/Models/Post.php
+public function reactions()
+{
+    return $this->hasMany(Reaction::class);
+}
 }
