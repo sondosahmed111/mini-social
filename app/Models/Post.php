@@ -4,12 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Reactable;
+
 
 class Post extends Model
 {
     use HasFactory;
+    use Reactable;
 
-protected $fillable = ['title','description','image','user_id'];
+
+
+    protected $fillable = [
+        'title',
+        'description',
+        'image',
+        'user_id'
+    ];
+    protected $appends = ['reaction_counts', 'total_reactions', 'user_reaction'];
+
+
 
     // نحمّل هذه العلاقات تلقائيًا
     protected $with = ['user', 'reactions', 'comments.user'];

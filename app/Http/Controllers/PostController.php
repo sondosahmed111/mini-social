@@ -13,8 +13,14 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with(['user', 'comments.user', 'reactions'])->latest()->get();
-        return view('posts.index', ['posts' => $posts]);
+
+        $posts = Post::with(['user', 'reactions.user'])
+            ->withCount('reactions')
+            ->latest()
+            ->paginate(10);
+        $PostsfromDB = Post::with(['user', 'comments.user'])->latest()->get();
+
+        return view('posts.index', ['posts' => $PostsfromDB]);
     }
 
     public function create()
@@ -48,7 +54,7 @@ class PostController extends Controller
         $users = User::all();
         return view('posts.edit', ['users' => $users, 'post' => $post]);
     }
-
+ 
     public function update(Request $request, Post $post)
     {
         $request->validate([
@@ -81,6 +87,8 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $post->load(['user', 'reactions.user']);
+        
         return view('posts.show', ['post' => $post]);
     }
 

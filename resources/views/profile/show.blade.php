@@ -67,7 +67,15 @@
                             <h5 class="fw-bold">{{ $post->title }}</h5>
                             <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
                         </div>
+
                         <p class="mb-3">{{ $post->description }}</p>
+
+                      @if ($post->image)
+                    <div class="post-image mb-3">
+                        <img src="{{ asset('storage/' . $post->image) }}" alt="صورة المنشور"
+                            class="img-fluid rounded hover-shadow" loading="lazy">
+                    </div>
+                @endif
 
                         @if(Auth::id() == $user->id)
                             <div class="d-flex justify-content-end gap-2">

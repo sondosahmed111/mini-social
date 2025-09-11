@@ -68,7 +68,7 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('profile.show')
-            ->with('success', 'تم تحديث البروفايل بنجاح ');
+            ->with('success', 'تم تحديث البروفايل بنجاح');
     }
 
     // Delete profile image (reset to default)
@@ -82,6 +82,32 @@ class ProfileController extends Controller
             $user->save();
         }
 
-        return response()->json(['success' => 'تم حذف الصورة ']);
+        return response()->json(['success' => 'تم حذف الصورة']);
+    }
+
+    // Follow a user
+    public function follow($id)
+    {
+        $userToFollow = User::findOrFail($id);
+
+        if (auth()->id() == $userToFollow->id) {
+            return back()->with('error', 'لا يمكنك متابعة نفسك');
+        }
+
+        if (!auth()->user()->following()->where('following_id', $userToFollow->id)->exists()) {
+            auth()->user()->following()->attach($userToFollow->id);
+        }
+
+        return back()->with('success', 'تم متابعة المستخدم بنجاح');
+    }
+
+    // Unfollow a user
+    public function unfollow($id)
+    {
+        $userToUnfollow = User::findOrFail($id);
+
+        auth()->user()->following()->detach($userToUnfollow->id);
+
+        return back()->with('success', 'تم إلغاء متابعة المستخدم');
     }
 }

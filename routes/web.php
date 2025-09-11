@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 // ----------------------
 // Authenticated Users Routes
 // ----------------------
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {});
 
     // ----------------------
     // Profile Routes
@@ -20,8 +20,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/delete-image', [ProfileController::class, 'destroyImage'])->name('profile.destroyImage');
-
     Route::get('/profile/{id}', [ProfileController::class, 'view'])->name('profile.view');
+
+    // ----------------------
+    // Follow Routes
+    // ----------------------
+    Route::post('/follow/{id}', [ProfileController::class, 'follow'])->name('profile.follow');
+    Route::delete('/unfollow/{id}', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
 
     // ----------------------
     // Posts Routes
@@ -37,16 +42,17 @@ Route::middleware('auth')->group(function () {
     // ----------------------
     // Reactions
     // ----------------------
+    
+    Route::post('/posts/{post}/react', [PostController::class, 'react'])->middleware('auth');
+    Route::get('/posts/{post}/reactions-count', [PostController::class, 'reactionsCount']); 
+      Route::middleware('auth')->group(function () {
+    Route::post('/reactions', [ReactionController::class, 'store'])->name('reactions.store');
+    Route::delete('/reactions', [ReactionController::class, 'destroy'])->name('reactions.destroy');
 
-Route::post('/posts/{post}/react', [PostController::class, 'react'])->middleware('auth');
-Route::get('/posts/{post}/reactions-count', [PostController::class, 'reactionsCount']);
 
 
-// edit
 
-Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+
 
 
     // ----------------------

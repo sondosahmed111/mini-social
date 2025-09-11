@@ -3,57 +3,122 @@
 @section('title', $user->name . ' - Mini Social')
 
 @section('content')
-    <div class="profile-container">
-        <div class="glass-card p-4 animate__animated animate__fadeIn text-center" style="max-width: 600px; width: 100%;">
-            <div class="user-avatar mx-auto mb-3 glow-animation"
-                style="width: 120px; height: 120px; font-size: 3rem; background: linear-gradient(135deg, rgba(74, 108, 250, 0.3), rgba(138, 43, 226, 0.3));">
-                @if($user->profile_image && $user->profile_image !== 'default.png')
-                    <img src="{{ asset('storage/profiles/' . $user->profile_image) }}" alt="{{ $user->name }}"
-                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                @else
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                @endif
+    <div class="container d-flex flex-column align-items-center mt-5 pt-5 pb-5">
+        <!-- كارت البروفايل -->
+        <div class="glass-card p-4 mb-5 animate__animated animate__fadeIn" style="max-width: 800px; width: 100%;">
+            <div class="row align-items-center">
+                <!-- صورة البروفايل -->
+                <div class="col-md-3 text-center">
+                    <div class="user-avatar mx-auto mb-3 glow-animation"
+                        style="width: 120px; height: 120px; font-size: 3rem; background: linear-gradient(135deg, rgba(74, 108, 250, 0.3), rgba(138, 43, 226, 0.3));">
+                        @if($user->profile_image && $user->profile_image !== 'default.png')
+                            <img src="{{ asset('storage/profiles/' . $user->profile_image) }}" alt="{{ $user->name }}"
+                                style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        @else
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        @endif
+                    </div>
+                </div>
+
+                <!-- بيانات البروفايل -->
+                <div class="col-md-9">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap">
+                        <div>
+                            <h3 class="glow-text">{{ $user->name }}</h3>
+                            <p class="text-muted mb-1">{{ $user->username }}</p>
+                            <p class="text-muted mb-2">{{ $user->email }}</p>
+
+                            @if($user->bio)
+                                <p class="mb-3">{{ $user->bio }}</p>
+                            @endif
+                        </div>
+
+                        <!-- زرار Follow / Unfollow -->
+                        @if(Auth::id() !== $user->id)
+                            <div>
+                                @if(Auth::user()->following->contains($user->id))
+                                    <form action="{{ route('profile.unfollow', $user->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-person-dash"></i> إلغاء المتابعة
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('profile.follow', $user->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-person-plus"></i> متابعة
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- إحصائيات -->
+                    <div class="d-flex gap-4 mb-3 mt-3">
+                        <div class="text-center">
+                            <h5 class="mb-0 glow-text">{{ $user->posts->count() }}</h5>
+                            <small>المنشورات</small>
+                        </div>
+                        <div class="text-center">
+                            <h5 class="mb-0 glow-text">{{ $user->followers->count() }}</h5>
+                            <small>المتابِعون</small>
+                        </div>
+                        <div class="text-center">
+                            <h5 class="mb-0 glow-text">{{ $user->following->count() }}</h5>
+                            <small>يتابع</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <h3 class="glow-text">{{ $user->name }}</h3>
-            <p class="text-muted mb-1">{{ $user->username }}</p>
-            <p class="text-muted mb-2">{{ $user->email }}</p>
-
-            @if($user->bio)
-                <p class="mb-3">{{ $user->bio }}</p>
-            @endif
         </div>
+
+        <!-- منشورات -->
+        <h4 class="mb-4 glow-text text-center">منشورات {{ $user->name }}:</h4>
+
+        @if($user->posts->count() > 0)
+            <div class="d-flex flex-column align-items-center w-100">
+                @foreach($user->posts as $post)
+                    <div class="glass-card p-4 mb-4 animate__animated animate__fadeInUp" style="max-width: 700px; width: 100%;">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="fw-bold">{{ $post->title }}</h5>
+                            <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
+                        </div>
+
+                        <p class="mb-3">{{ $post->description }}</p>
+
+                        @if($post->image)
+                            <div class="mb-3">
+                                <img src="{{ asset('storage/posts/' . $post->image) }}" 
+                                     alt="Post Image"
+                                     class="img-fluid rounded-3" 
+                                     style="max-height: 400px; object-fit: cover; width: 100%;">
+                            </div>
+                        @endif
+
+                        @if(Auth::id() == $user->id)
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil-square"></i> تعديل
+                                </a>
+                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('متأكد إنك عايز تحذف البوست ده؟');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> حذف
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="glass-card p-4 text-center" style="max-width: 600px; width: 100%;">
+                <p class="text-muted mb-0">لا توجد منشورات حتى الآن</p>
+            </div>
+        @endif
     </div>
-
-    <style>
-        .profile-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 70px); /* اطرح ارتفاع الناف بار لو عندك */
-            padding: 20px;
-        }
-
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-avatar {
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            font-weight: bold;
-        }
-
-        .glow-text {
-            color: var(--text-primary);
-            text-shadow: 0 0 10px rgba(74, 108, 250, 0.5);
-        }
-    </style>
 @endsection
