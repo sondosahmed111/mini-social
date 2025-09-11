@@ -1,22 +1,22 @@
 <?php
-
+// 2. Reaction Model - app/Models/Reaction.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reaction extends Model
 {
-    protected $fillable = ['user_id', 'post_id', 'type'];
+    protected $fillable = ['user_id', 'reactable_id', 'reactable_type', 'type'];
 
-    // العلاقة مع المستخدم
-    public function user()
+    public function reactable(): MorphTo
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 
-    // العلاقة مع البوست
-    public function post()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(User::class);
     }
 }

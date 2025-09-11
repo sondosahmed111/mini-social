@@ -12,6 +12,11 @@ class PostController extends Controller
     // عرض كل البوستات
     public function index()
     {
+        
+        $posts = Post::with(['user', 'reactions.user'])
+            ->withCount('reactions')
+            ->latest()
+            ->paginate(10);
         $PostsfromDB = Post::with(['user', 'comments.user'])->latest()->get();
 
         return view('posts.index', ['posts' => $PostsfromDB]);
@@ -96,6 +101,8 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $post->load(['user', 'reactions.user']);
+        
         return view('posts.show', ['post' => $post]);
     }
 }

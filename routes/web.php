@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 // ----------------------
 // Authenticated Users Routes
 // ----------------------
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {});
 
 
 
@@ -58,7 +58,10 @@ Route::middleware('auth')->group(function () {
     // ----------------------
     // Reactions
     // ----------------------
-    Route::post('/reaction/toggle', [ReactionController::class, 'toggle'])->name('reaction.toggle');
+   Route::middleware('auth')->group(function () {
+    Route::post('/reactions', [ReactionController::class, 'store'])->name('reactions.store');
+    Route::delete('/reactions', [ReactionController::class, 'destroy'])->name('reactions.destroy');
+
 
     // ----------------------
     // Other Pages
