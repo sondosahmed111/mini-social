@@ -125,6 +125,7 @@
                             <i class="bi bi-x"></i> إلغاء
                         </a>
                     </div>
+
                 </form>
             @else
                 <div class="d-flex justify-content-between align-items-center">
@@ -147,6 +148,8 @@
                                     <i class="bi bi-trash"></i> حذف
                                 </button>
                             </form>
+             {{ $post->user->name ?? 'مستخدم' }}
+
                         </div>
                     @endif
                 </div>

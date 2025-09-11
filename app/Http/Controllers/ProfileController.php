@@ -28,6 +28,15 @@ class ProfileController extends Controller
 
         return view('profile.view', compact('user'));
     }
+    public function followingList()
+{
+    $user = auth()->user();
+
+    // جلب كل الناس اللي أنا متابعهم
+    $followingUsers = $user->following()->get();
+
+    return view('profile.following', compact('followingUsers'));
+}
 
     // Show edit profile form (for logged-in user only)
     public function edit()

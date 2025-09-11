@@ -63,11 +63,11 @@
                             <small>المنشورات</small>
                         </div>
                         <div class="text-center">
-                            <h5 class="mb-0 glow-text">{{ $user->followers->count() }}</h5>
+                           <a href="3"><h5 class="mb-0 glow-text">{{ $user->followers->count() }}</h5></a> 
                             <small>المتابِعون</small>
                         </div>
                         <div class="text-center">
-                            <h5 class="mb-0 glow-text">{{ $user->following->count() }}</h5>
+                           <a href="{{route('profile.following')}}"> <h5 class="mb-0 glow-text">{{ $user->following->count() }}</h5></a> 
                             <small>يتابع</small>
                         </div>
                     </div>
@@ -89,15 +89,12 @@
 
                         <p class="mb-3">{{ $post->description }}</p>
 
-                        @if($post->image)
-                            <div class="mb-3">
-                                <img src="{{ asset('storage/posts/' . $post->image) }}" 
-                                     alt="Post Image"
-                                     class="img-fluid rounded-3" 
-                                     style="max-height: 400px; object-fit: cover; width: 100%;">
-                            </div>
-                        @endif
-
+                      @if ($post->image)
+                    <div class="post-image mb-3">
+                        <img src="{{ asset('storage/' . $post->image) }}" alt="صورة المنشور"
+                            class="img-fluid rounded hover-shadow" loading="lazy">
+                    </div>
+                @endif
                         @if(Auth::id() == $user->id)
                             <div class="d-flex justify-content-end gap-2">
                                 <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-sm btn-primary">
