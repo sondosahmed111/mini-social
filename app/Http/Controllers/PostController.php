@@ -61,7 +61,7 @@ class PostController extends Controller
         return view('posts.edit', ['users' => $users, 'post' => $post]);
 
     }
-
+ 
     public function update(Request $request, Post $post)
     {
         $request->validate([

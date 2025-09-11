@@ -3,7 +3,8 @@
 @section('title', 'إنشاء حساب - Mini Social')
 
 @section('content')
-    <div class="container mt-4 pb-5">
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+      <div class="col-md-10 col-lg-8 mx-auto" style="max-width: 800px;">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="glass-card animate__animated animate__fadeInUp float-animation"
@@ -14,9 +15,8 @@
                                 style="width: 100px; height: 100px; font-size: 2.5rem; background: linear-gradient(135deg, rgba(74, 108, 250, 0.3), rgba(138, 43, 226, 0.3)); border: 2px solid rgba(255,255,255,0.3);">
                                 <i class="bi bi-person-plus"></i>
                             </div>
-                            <h2 class="card-title glow-text mb-3" style="font-weight: 700; font-size: 2rem;">إنشاء حساب جديد
+                            <h2 class="card-title glow-text mb-3" style="font-weight: 700; font-size: 2rem;">Mini social 
                             </h2>
-                            <p class="text-muted lead">انضم إلى مجتمعنا وابدأ رحلتك الاجتماعية</p>
                         </div>
 
                         <form id="registerForm" action="{{ route('register') }}" method="POST">
@@ -153,8 +153,8 @@
             </div>
         </div>
     </div>
-
-    <style>
+</div>
+<style>
         .glass-input:focus {
             background: rgba(255, 255, 255, 0.15) !important;
             border-color: rgba(74, 108, 250, 0.5) !important;

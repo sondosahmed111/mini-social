@@ -3,7 +3,9 @@
 @section('title', 'تسجيل الدخول - Mini Social')
 
 @section('content')
-    <div class="container mt-4 pb-5">
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+<div class="col-md-10 col-lg-8 mx-auto" style="max-width: 800px;">
+
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="glass-card animate__animated animate__fadeInUp float-animation"
@@ -14,9 +16,10 @@
                                 style="width: 100px; height: 100px; font-size: 2.5rem; background: linear-gradient(135deg, rgba(74, 108, 250, 0.3), rgba(138, 43, 226, 0.3)); border: 2px solid rgba(255,255,255,0.3);">
                                 <i class="bi bi-box-arrow-in-right"></i>
                             </div>
-                            <h2 class="card-title glow-text mb-3" style="font-weight: 700; font-size: 2rem;">تسجيل الدخول
+    
+                            <h2 class="card-title glow-text mb-3" style="font-weight: 700; font-size: 2rem;">Mini Social
                             </h2>
-                            <p class="text-muted lead">مرحبًا بعودتك! يرجى تسجيل الدخول إلى حسابك</p>
+            
                         </div>
 
                         @if (session('status'))
@@ -78,14 +81,7 @@
                                     <div class="text-danger mt-1 small">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="mb-4">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="remember" name="remember"
-                                        style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);"
-                                        {{ $rememberedEmail ? 'checked' : (old('remember') ? 'checked' : '') }}>
-                                    <label class="form-check-label text-muted" for="remember">تذكرني</label>
-                                </div>
-                            </div>
+                          
                             <button type="submit" class="futuristic-btn w-100 py-3 mb-4"
                                 style="font-weight: 600; font-size: 1.1rem; background: linear-gradient(135deg, rgba(74, 108, 250, 0.8), rgba(138, 43, 226, 0.8)); border: none; border-radius: 15px; position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 8px 32px rgba(74, 108, 250, 0.3);">
                                 <span class="btn-text">تسجيل الدخول</span>
@@ -105,6 +101,7 @@
             </div>
         </div>
     </div>
+</div>
 
     <style>
         .glass-input:focus {

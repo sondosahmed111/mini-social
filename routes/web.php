@@ -20,8 +20,13 @@ Route::middleware('auth')->group(function () {});
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/delete-image', [ProfileController::class, 'destroyImage'])->name('profile.destroyImage');
-
     Route::get('/profile/{id}', [ProfileController::class, 'view'])->name('profile.view');
+
+    // ----------------------
+    // Follow Routes
+    // ----------------------
+    Route::post('/follow/{id}', [ProfileController::class, 'follow'])->name('profile.follow');
+    Route::delete('/unfollow/{id}', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
 
     // ----------------------
     // Posts Routes
