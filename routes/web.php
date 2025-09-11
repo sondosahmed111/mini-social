@@ -13,6 +13,17 @@ use Illuminate\Support\Facades\Route;
 // ----------------------
 Route::middleware('auth')->group(function () {
 
+
+
+     // ----------------------
+    // Following List Route
+    // ----------------------
+    Route::get('/profile/following', [ProfileController::class, 'followingList'])->name('profile.following');
+
+
+
+
+
     // ----------------------
     // Profile Routes
     // ----------------------
@@ -22,12 +33,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/delete-image', [ProfileController::class, 'destroyImage'])->name('profile.destroyImage');
     Route::get('/profile/{id}', [ProfileController::class, 'view'])->name('profile.view');
 
+
+
+
+
     // ----------------------
     // Follow Routes
     // ----------------------
     Route::post('/follow/{id}', [ProfileController::class, 'follow'])->name('profile.follow');
     Route::delete('/unfollow/{id}', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
 
+   
     // ----------------------
     // Posts Routes
     // ----------------------

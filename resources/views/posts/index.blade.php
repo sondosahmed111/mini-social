@@ -77,8 +77,11 @@
                         {{ substr($post->user->name ?? 'م', 0, 1) }}
                     </div>
                     <div class="ms-2">
-                        <h6 class="mb-0">{{ $post->user->name ?? 'مستخدم' }}</h6>
-                        <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
+                <h6 class="mb-0">
+                    <a href="{{ route('profile.view', $post->user->id) }}" class="text-decoration-none">
+                        {{ $post->user->name ?? 'مستخدم' }}
+                    </a>
+                </h6>     <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
                     </div>
 
                     {{-- زر تعديل وحذف للمالك --}}

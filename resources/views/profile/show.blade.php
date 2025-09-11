@@ -46,12 +46,20 @@
                     </div>
 
                     <!-- إحصائيات -->
-                    <div class="d-flex gap-4 mb-3 mt-3">
-                        <div class="text-center">
-                            <h5 class="mb-0 glow-text">{{ $user->posts->count() }}</h5>
-                            <small>المنشورات</small>
-                        </div>
-                    </div>
+                   <div class="d-flex gap-4 mb-3 mt-3">
+    <div class="text-center">
+        <h5 class="mb-0 glow-text">{{ $user->posts->count() }}</h5>
+        <small>المنشورات</small>
+    </div>
+
+    <div class="text-center">
+        <h5 class="mb-0 glow-text">{{ $user->following->count() }}</h5>
+        <small>
+            <a href="{{ route('profile.following') }}">المتابَعين</a>
+        </small>
+    </div>
+</div>
+
                 </div>
             </div>
         </div>
