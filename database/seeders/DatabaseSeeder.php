@@ -20,5 +20,9 @@ class DatabaseSeeder extends Seeder
             CommentSeeder::class,
             LikeSeeder::class,
         ]);
-    }
+    
+    $this->call(UsersTableSeeder::class);
+
 }
+    }
+

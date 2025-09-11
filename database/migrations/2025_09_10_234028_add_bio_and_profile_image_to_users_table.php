@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-Schema::create('reactions', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('post_id')->constrained()->onDelete('cascade');
-    $table->foreignId('user_id')->constrained()->onDelete('cascade');
-    $table->string('type'); // like, love, etc.
-    $table->timestamps();
-});
+        Schema::table('users', function (Blueprint $table) {
+            $table->text('bio')->nullable();
+            $table->string('profile_image')->default('default.png');
+        });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('reactions');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['bio', 'profile_image']);
+        });
     }
 };

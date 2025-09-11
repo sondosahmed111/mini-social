@@ -37,7 +37,17 @@ Route::middleware('auth')->group(function () {
     // ----------------------
     // Reactions
     // ----------------------
-    Route::post('/reaction/toggle', [ReactionController::class, 'toggle'])->name('reaction.toggle');
+
+Route::post('/posts/{post}/react', [PostController::class, 'react'])->middleware('auth');
+Route::get('/posts/{post}/reactions-count', [PostController::class, 'reactionsCount']);
+
+
+// edit
+
+Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+
 
     // ----------------------
     // Other Pages
@@ -54,6 +64,9 @@ Route::middleware('auth')->group(function () {
     // ----------------------
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+
 });
 
 // ----------------------

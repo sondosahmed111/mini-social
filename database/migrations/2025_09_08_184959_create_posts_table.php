@@ -11,20 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->string('title', 255);
-            $table->text('description');
-            $table->string('image')->nullable();
-            $table->unsignedBigInteger('user_id'); 
-            $table->timestamps();
-
-            // Foreign key 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
+Schema::create('posts', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');        // العمود ده
+    $table->text('description');   // العمود ده
+    $table->string('image')->nullable();
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->timestamps();
+});
     }
-
     /**
      * Reverse the migrations.
      */

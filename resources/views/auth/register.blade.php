@@ -41,7 +41,8 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="username" class="form-label glow-text mb-2" style="font-weight: 600;">اسم
+                                <label for="username"
+                                 class="form-label glow-text mb-2" style="font-weight: 600;">اسم
                                     المستخدم</label>
                                 <div class="input-group">
                                     <span class="input-group-text glass-card"
