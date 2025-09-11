@@ -30,9 +30,13 @@
         font-size: 16px; padding: 4px 6px; border-radius: 50%;
         background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         cursor: pointer; display: flex; align-items: center; justify-content: center;
-        opacity: 0.6; transition: opacity 0.2s;
+        opacity: 0.8; transition: opacity 0.2s;
     }
     .fb-reaction.selected { opacity: 1; }
+    .comment-actions button {
+        border-radius: 20px;
+        padding: 2px 10px;
+    }
 </style>
 @endpush
 
@@ -43,7 +47,9 @@
     {{-- زرار إنشاء منشور --}}
     @auth
     <div class="text-center mb-4 d-flex justify-content-center gap-2">
-        <a href="{{ route('posts.create') }}" class="btn btn-success">+ إنشاء منشور جديد</a>
+        <a href="{{ route('posts.create') }}" class="btn btn-primary rounded-pill px-4">
+            + إنشاء منشور جديد
+        </a>
     </div>
     @endauth
 
@@ -94,10 +100,10 @@
                 <div class="fb-main-reaction">
                     <i class="bi bi-hand-thumbs-up"></i> <span>إعجاب</span>
                     <div class="fb-reactions-box">
-                        @php $types = ['like'=>'👍','love'=>'❤','haha'=>'😄','wow'=>'😯','sad'=>'😢','angry'=>'😡']; @endphp
+                        @php $types = ['like'=>'👍','love'=>'❤️','haha'=>'😄','wow'=>'😯','sad'=>'😢','angry'=>'😡']; @endphp
                         @foreach($types as $key => $emoji)
                         <div class="fb-reaction {{ $post->reactions->where('user_id', auth()->id())->first()?->type === $key ? 'selected' : '' }}" data-reaction="{{ $key }}" title="{{ $key }}">
-                            {!! $emoji !!} <span class="reaction-count">{{ $post->reactions->where('type',$key)->count() }}</span>
+                            {!! $emoji !!}
                         </div>
                         @endforeach
                     </div>
@@ -107,65 +113,62 @@
             <div class="action-btn"><i class="bi bi-share"></i><span>مشاركة</span></div>
         </div>
 
-{{-- قسم التعليقات --}}
-<div class="comments mt-3">
-    @foreach ($post->comments as $comment)
-        <div class="comment-box mb-2 p-2 border rounded bg-light">
-            {{-- لو المستخدم بيدوس تعديل --}}
-            @if(session('edit_comment_id') == $comment->id)
-                <form action="{{ route('comments.update', $comment->id) }}" method="POST" class="d-flex flex-column gap-2">
-                    @csrf
-                    @method('PUT')
-                    <textarea name="body" class="form-control" rows="2" required>{{ old('body', $comment->body) }}</textarea>
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-success btn-sm px-3">
-                            <i class="bi bi-check2"></i> حفظ
-                        </button>
-                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm px-3">
-                            <i class="bi bi-x"></i> إلغاء
-                        </a>
-                    </div>
-
-                </form>
-            @else
-                <div class="d-flex justify-content-between align-items-center">
-                    <p class="mb-1">
-                        <strong>{{ $comment->user->name }}:</strong> {{ $comment->body }}
-                    </p>
-                    @if(auth()->id() == $comment->user_id)
-                        <div class="btn-group">
-                            {{-- زر تعديل --}}
-                            <form action="{{ route('comments.edit', $comment->id) }}" method="GET">
-                                <button type="submit" class="btn btn-sm btn-outline-warning">
-                                    <i class="bi bi-pencil"></i> تعديل
+        {{-- قسم التعليقات --}}
+        <div class="comments mt-3">
+            @foreach ($post->comments as $comment)
+                <div class="comment-box mb-2 p-2 border rounded bg-light">
+                    {{-- لو المستخدم بيدوس تعديل --}}
+                    @if(session('edit_comment_id') == $comment->id)
+                        <form action="{{ route('comments.update', $comment->id) }}" method="POST" class="d-flex flex-column gap-2">
+                            @csrf
+                            @method('PUT')
+                            <textarea name="body" class="form-control" rows="2" required>{{ old('body', $comment->body) }}</textarea>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-success btn-sm px-3 rounded-pill">
+                                    <i class="bi bi-check2"></i> حفظ
                                 </button>
-                            </form>
-                            {{-- زر حذف --}}
-                            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    <i class="bi bi-trash"></i> حذف
-                                </button>
-                            </form>
-             {{ $post->user->name ?? 'مستخدم' }}
-
+                                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm px-3 rounded-pill">
+                                    <i class="bi bi-x"></i> إلغاء
+                                </a>
+                            </div>
+                        </form>
+                    @else
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="mb-1">
+                                <strong>{{ $comment->user->name }}:</strong> {{ $comment->body }}
+                            </p>
+                            @if(auth()->id() == $comment->user_id)
+                                <div class="btn-group">
+                                    {{-- زر تعديل --}}
+                                    <form action="{{ route('comments.edit', $comment->id) }}" method="GET" class="me-1">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill comment-actions">
+                                            <i class="bi bi-pencil"></i> تعديل
+                                        </button>
+                                    </form>
+                                    {{-- زر حذف --}}
+                                    <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill comment-actions">
+                                            <i class="bi bi-trash"></i> حذف
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
                         </div>
                     @endif
                 </div>
-            @endif
-        </div>
-    @endforeach
+            @endforeach
 
-    {{-- إضافة تعليق --}}
-    @auth
-    <form action="{{ route('comments.store', $post->id) }}" method="POST" class="d-flex gap-2 mt-2">
-        @csrf
-        <input type="text" name="body" class="form-control form-control-sm rounded-pill" placeholder="اكتب تعليقًا..." required>
-        <button type="submit" class="btn btn-primary btn-sm px-3 rounded-pill">نشر</button>
-    </form>
-    @endauth
-</div>
+            {{-- إضافة تعليق --}}
+            @auth
+            <form action="{{ route('comments.store', $post->id) }}" method="POST" class="d-flex gap-2 mt-2">
+                @csrf
+                <input type="text" name="body" class="form-control form-control-sm rounded-pill" placeholder="اكتب تعليقًا..." required>
+                <button type="submit" class="btn btn-primary btn-sm px-3 rounded-pill">نشر</button>
+            </form>
+            @endauth
+        </div>
     </div>
     @empty
     <div class="text-center"><p>لا توجد منشورات حالياً</p></div>
