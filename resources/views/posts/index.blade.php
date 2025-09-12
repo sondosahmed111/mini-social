@@ -9,7 +9,7 @@
     {{-- زرار إنشاء منشور --}}
     @auth
     <div class="text-center mb-4 d-flex justify-content-center gap-2">
-        <a href="{{ route('posts.create') }}" class="btn btn-success">+ إنشاء منشور جديد</a>
+        <a href="{{ route('posts.create') }}" class="btn btn-primary">+ إنشاء منشور جديد</a>
     </div>
     @endauth
 
@@ -64,37 +64,38 @@
         {{-- أزرار الريأكشن والتعليق --}}
         <div class="post-actions d-flex align-items-center gap-3">
             {{-- زر الريأكشنات --}}
-            <div class="reactions-wrapper">
+            <div class="dropdown">
                 @php $userReaction = $post->reactions->where('user_id', auth()->id())->first(); @endphp
 
-                <button class="btn btn-outline-primary btn-sm">
+                <button class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
                     @if($userReaction)
-                        {{ $userReaction->type === 'like' ? '👍' : '' }}
-                        {{ $userReaction->type === 'love' ? '❤' : '' }}
-                        {{ $userReaction->type === 'haha' ? '😄' : '' }}
-                        {{ $userReaction->type === 'wow' ? '😯' : '' }}
-                        {{ $userReaction->type === 'sad' ? '😢' : '' }}
-                        {{ $userReaction->type === 'angry' ? '😡' : '' }}
-                        {{ ucfirst($userReaction->type) }}
+                        @switch($userReaction->type)
+                            @case('like') 👍 إعجاب @break
+                            @case('love') ❤️ حب @break
+                            @case('haha') 😄 ضحك @break
+                            @case('wow') 😯 دهشة @break
+                            @case('sad') 😢 حزن @break
+                            @case('angry') 😡 غضب @break
+                        @endswitch
                     @else
                         <i class="bi bi-hand-thumbs-up"></i> إعجاب
                     @endif
                 </button>
 
-                {{-- كل الريأكشنز تبان جنب بعض --}}
-                <div class="d-flex gap-2 mt-2">
-                    @foreach (['like'=>'👍','love'=>'❤','haha'=>'😄','wow'=>'😯','sad'=>'😢','angry'=>'😡'] as $type=>$emoji)
-                    <form method="POST" action="{{ route('reactions.store') }}">
-                        @csrf
-                        <input type="hidden" name="reactable_type" value="App\Models\Post">
-                        <input type="hidden" name="reactable_id" value="{{ $post->id }}">
-                        <input type="hidden" name="type" value="{{ $type }}">
-                        <button type="submit" class="btn btn-light btn-sm">
-                            {{ $emoji }} ({{ $post->reactions->where('type',$type)->count() }})
-                        </button>
-                    </form>
+                {{-- قائمة الريأكشنات --}}
+                <ul class="dropdown-menu">
+                    @foreach (['like'=>'👍 إعجاب','love'=>'❤️ حب','haha'=>'😄 ضحك','wow'=>'😯 دهشة','sad'=>'😢 حزن','angry'=>'😡 غضب'] as $type=>$label)
+                    <li>
+                        <form method="POST" action="{{ route('reactions.store') }}">
+                            @csrf
+                            <input type="hidden" name="reactable_type" value="App\Models\Post">
+                            <input type="hidden" name="reactable_id" value="{{ $post->id }}">
+                            <input type="hidden" name="type" value="{{ $type }}">
+                            <button type="submit" class="dropdown-item">{{ $label }}</button>
+                        </form>
+                    </li>
                     @endforeach
-                </div>
+                </ul>
             </div>
 
             {{-- زر تعليق --}}

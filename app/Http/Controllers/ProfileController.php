@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\UserFollowed;
 
 class ProfileController extends Controller
 {
@@ -28,15 +29,16 @@ class ProfileController extends Controller
 
         return view('profile.view', compact('user'));
     }
+
     public function followingList()
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    // جلب كل الناس اللي أنا متابعهم
-    $followingUsers = $user->following()->get();
+        // جلب كل الناس اللي أنا متابعهم
+        $followingUsers = $user->following()->get();
 
-    return view('profile.following', compact('followingUsers'));
-}
+        return view('profile.following', compact('followingUsers'));
+    }
 
     // Show edit profile form (for logged-in user only)
     public function edit()
@@ -105,6 +107,9 @@ class ProfileController extends Controller
 
         if (!auth()->user()->following()->where('following_id', $userToFollow->id)->exists()) {
             auth()->user()->following()->attach($userToFollow->id);
+
+            // إرسال إشعار للـ user اللي أنا متابعه
+            $userToFollow->notify(new UserFollowed(auth()->user()));
         }
 
         return back()->with('success', 'تم متابعة المستخدم بنجاح');
