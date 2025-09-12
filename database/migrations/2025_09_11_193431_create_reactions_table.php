@@ -6,29 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('reactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('post_id')->constrained()->onDelete('cascade');
-            $table->string('reaction_type'); // e.g., 'like', 'love', 'haha'
+            $table->morphs('reactable'); // ينشئ reactable_id و reactable_type
+            $table->string('type');      // like, love, haha, angry...
             $table->timestamps();
 
-            // Ensures a user can only have one reaction per post
-            $table->unique(['user_id', 'post_id']);
+            $table->unique(['user_id', 'reactable_id', 'reactable_type']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('reactions');
-
     }
 };

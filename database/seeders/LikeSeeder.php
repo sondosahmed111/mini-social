@@ -1,5 +1,4 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -10,11 +9,12 @@ class LikeSeeder extends Seeder
     public function run()
     {
         DB::table('reactions')->insert([
-            'user_id'    => 1,
-            'post_id'    => 1,
-            'type'       => 'like', 
-            'created_at' => now(),
-            'updated_at' => now(),
+            'user_id'        => 1,
+            'reactable_id'   => 1,
+            'reactable_type' => 'App\Models\Post',
+            'type'           => 'like',
+            'created_at'     => now(),
+            'updated_at'     => now(),
         ]);
 
     }

@@ -11,16 +11,11 @@ use Illuminate\Support\Facades\Route;
 // ----------------------
 // Authenticated Users Routes
 // ----------------------
-Route::middleware('auth')->group(function () {});
-
-
-
-     // ----------------------
+Route::middleware('auth')->group(function () {
+    // ----------------------
     // Following List Route
     // ----------------------
     Route::get('/profile/following', [ProfileController::class, 'followingList'])->name('profile.following');
-
-
 
 
 
@@ -60,7 +55,6 @@ Route::middleware('auth')->group(function () {});
     // ----------------------
     // Reactions
     // ----------------------
-   Route::middleware('auth')->group(function () {
     Route::post('/reactions', [ReactionController::class, 'store'])->name('reactions.store');
     Route::delete('/reactions', [ReactionController::class, 'destroy'])->name('reactions.destroy');
 
@@ -81,9 +75,13 @@ Route::middleware('auth')->group(function () {});
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
-    Route::put('//comments/{comment}/update', [CommentController::class,'update'])->name('comments.update');
+    Route::put('/comments/{comment}/update', [CommentController::class,'update'])->name('comments.update');
+
 });
 
+
+
+    
 // ----------------------
 // Home (default)
 // ----------------------

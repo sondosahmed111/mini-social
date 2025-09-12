@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->foreign('follower_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('following_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unique(['follower_id', 'following_id']);
         });
     }
 

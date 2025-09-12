@@ -1,13 +1,12 @@
 <?php
-// 3. Add Reactable Trait - app/Traits/Reactable.php
+
 namespace App\Traits;
 
 use App\Models\Reaction;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Reactable
 {
-    public function reactions(): MorphMany
+    public function reactions()
     {
         return $this->morphMany(Reaction::class, 'reactable');
     }
@@ -17,8 +16,7 @@ trait Reactable
         return $this->reactions()
             ->selectRaw('type, COUNT(*) as count')
             ->groupBy('type')
-            ->pluck('count', 'type')
-            ->toArray();
+            ->pluck('count', 'type');
     }
 
     public function getTotalReactionsAttribute()
@@ -28,16 +26,14 @@ trait Reactable
 
     public function getUserReactionAttribute()
     {
-        if (!auth()->check()) return null;
-        
-        return $this->reactions()
-            ->where('user_id', auth()->id())
-            ->first()?->type;
-    }
+        if (!auth()->check()) {
+            return null;
+        }
 
-    public function hasReactionFrom($userId = null): bool
-    {
-        $userId = $userId ?? auth()->id();
-        return $this->reactions()->where('user_id', $userId)->exists();
+        $reaction = $this->reactions()
+            ->where('user_id', auth()->id())
+            ->first();
+
+        return $reaction ? $reaction->type : null;
     }
 }
