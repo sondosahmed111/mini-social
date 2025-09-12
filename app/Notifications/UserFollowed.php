@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -19,15 +18,14 @@ class UserFollowed extends Notification
 
     public function via($notifiable)
     {
-        return ['database']; // نخزنها في الداتابيز
+        return ['database'];
     }
 
     public function toDatabase($notifiable)
     {
         return [
-            'message' => $this->follower->name . ' بدأ بمتابعتك',
+            'message' => "{$this->follower->name} بدأ بمتابعتك",
             'follower_id' => $this->follower->id,
         ];
-    
     }
 }

@@ -16,30 +16,27 @@ class CommentController extends Controller
             'body' => 'required|string|max:500',
         ]);
 
-        $comment = $post->comments()->create([
+        $comment = Comment::create([
+            'user_id' => auth()->id(),
+            'post_id' => $post->id,
             'body'    => $request->body,
-            'user_id' => Auth::id(),
         ]);
 
-        $comment->load('user');
+        $post->user->notify(new \App\Notifications\PostCommented(auth()->user(), $post, $comment));
 
-        return redirect()->back()->with('success', 'تم إضافة التعليق');
+        return redirect()->back()->with('success', 'تم إضافة التعليق بنجاح');
     }
 
-    // تعديل تعليق
     public function update(Request $request, Comment $comment)
     {
-        // تحقق إن المستخدم هو صاحب التعليق
         if ($comment->user_id !== auth()->id()) {
             abort(403, 'غير مسموح لك بتعديل هذا التعليق');
         }
 
-        // التحقق من البيانات
         $request->validate([
             'body' => 'required|string|max:500',
         ]);
 
-        // تحديث التعليق
         $comment->update([
             'body' => $request->body,
         ]);
@@ -47,7 +44,6 @@ class CommentController extends Controller
         return redirect()->back()->with('success', 'تم تعديل التعليق بنجاح');
     }
 
-    // حذف تعليق
     public function destroy(Comment $comment)
     {
         if (auth()->id() !== $comment->user_id && !auth()->user()->is_admin) {
@@ -59,9 +55,8 @@ class CommentController extends Controller
         return redirect()->back()->with('success', 'تم حذف التعليق 🗑');
     }
     public function edit(Comment $comment)
-{
-    // رجع نفس الصفحة مع تحديد إن الكومنت ده بيتعدل
-    return redirect()->back()->with('edit_comment_id', $comment->id);
-}
-
+    {
+        // رجع نفس الصفحة مع تحديد إن الكومنت ده بيتعدل
+        return redirect()->back()->with('edit_comment_id', $comment->id);
+    }
 }
