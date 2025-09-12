@@ -297,76 +297,123 @@
             font-size: 16px;
         }
 
-        /* نظام التفاعلات - مثل فيسبوك تمامًا */
-        .fb-reaction-container {
-            position: relative;
-        }
+.post-actions {
+    position: relative;
+    padding: 10px 0;
+}
 
-        .fb-main-reaction {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            padding: 8px 15px;
-            border-radius: 6px;
-            transition: background-color 0.2s;
-        }
+.fb-reaction-container {
+    position: relative;
+}
 
-        .fb-main-reaction:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
+.fb-main-reaction {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    gap: 5px;
+    color: #65676b;
+    font-size: 14px;
+}
 
-        .fb-reactions-box {
-            position: absolute;
-            bottom: 100%;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 6px 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-            display: flex;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 100;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
+.fb-main-reaction:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
-        .fb-reaction-container:hover .fb-reactions-box {
-            opacity: 1;
-            visibility: visible;
-        }
+.fb-main-reaction.active {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
-        .fb-reaction {
-            width: 42px;
-            height: 42px;
-            margin: 0 3px;
-            transition: transform 0.3s;
-            cursor: pointer;
-            font-size: 34px;
-            line-height: 42px;
-            text-align: center;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
+.fb-main-reaction i {
+    font-size: 16px;
+}
 
-        .fb-reaction:hover {
-            transform: scale(1.4) translateY(-8px);
-        }
+.fb-reactions-box {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 6px 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
 
-        /*منشور جديد*/
-       
+.fb-reaction-container:hover .fb-reactions-box {
+    opacity: 1;
+    visibility: visible;
+}
 
-        /* تخصيص ألوان الريأكتات */
-        .like { color: #1877F2; }
-        .love { color: #F3425F; }
-        .care { color: #F7B928; }
-        .haha { color: #F7B928; }
-        .wow { color: #F7B928; }
-        .sad { color: #F7B928; }
-        .angry { color: #E4710A; }
+.fb-reaction {
+    width: 42px;
+    height: 42px;
+    margin: 0 3px;
+    transition: transform 0.3s;
+    cursor: pointer;
+    font-size: 34px;
+    line-height: 42px;
+    text-align: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fb-reaction:hover {
+    transform: scale(1.4) translateY(-8px);
+}
+
+/* Laravel Forms Styling */
+.reaction-form {
+    display: contents;
+}
+
+.reaction-form button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 34px;
+    padding: 0;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    line-height: 42px;
+    text-align: center;
+}
+
+.reaction-form button:hover {
+    transform: scale(1.4) translateY(-8px);
+}
+
+/* تخصيص ألوان الريأكتات */
+.like { color: #1877F2; }
+.love { color: #F3425F; }
+.care { color: #F7B928; }
+.haha { color: #F7B928; }
+.wow { color: #F7B928; }
+.sad { color: #F7B928; }
+.angry { color: #E4710A; }
+
+/* Active reaction states للزر الرئيسي */
+.fb-main-reaction.reaction-like { color: #1877F2; }
+.fb-main-reaction.reaction-love { color: #F3425F; }
+.fb-main-reaction.reaction-haha { color: #F7B928; }
+.fb-main-reaction.reaction-wow { color: #F7B928; }
+.fb-main-reaction.reaction-sad { color: #F7B928; }
+.fb-main-reaction.reaction-angry { color: #E4710A; }
 
         /* التعليقات - بتصميم زجاجي */
         .comments-section {
