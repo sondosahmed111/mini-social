@@ -983,12 +983,13 @@
                 
                 let icon, text;
                 switch(reactionType) {
-                    case 'like':
-                        icon = '<i class="bi bi-hand-thumbs-up-fill" style="color: #1877F2;"></i>';
-                        text = 'إعجاب';
+                 
+                     case 'haha':
+                        icon = '<span style="font-size: 16px;">👍</span>';
+                        text = 'لايك';
                         break;
-                    case 'love':
-                        icon = '<i class="bi bi-heart-fill" style="color: #F3425F;"></i>';
+                    case 'wow':
+                        icon = '<span style="font-size: 16px;">❤️</span>';
                         text = 'حب';
                         break;
                     case 'haha':
