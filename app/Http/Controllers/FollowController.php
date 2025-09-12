@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Follow;                          
-use Illuminate\Http\Request;   
+use App\Models\Follow;
+use Illuminate\Http\Request;
 use App\Models\User;
+use App\Notifications\UserFollowed;
+use Illuminate\Support\Facades\Auth;
 class FollowController extends Controller
 {
     public function follow($id)
@@ -17,6 +19,7 @@ class FollowController extends Controller
                 'following_id' => $userToFollow->id
             ]);
         }
+
 
         return back()->with('success', 'تمت المتابعة ✅');
     }
