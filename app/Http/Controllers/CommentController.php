@@ -17,13 +17,13 @@ class CommentController extends Controller
         ]);
 
         $comment = Comment::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'post_id' => $post->id,
             'body'    => $request->body,
         ]);
 
         // إشعار صاحب البوست
-        $post->user->notify(new \App\Notifications\PostCommented(auth()->user(), $post, $comment));
+        $post->user->notify(new \App\Notifications\PostCommented(Auth::user(), $post, $comment));
 
         return redirect()->back()->with('success', 'تم إضافة التعليق بنجاح');
     }
@@ -32,7 +32,7 @@ class CommentController extends Controller
     public function update(Request $request, Comment $comment)
     {
         // تحقق إن المستخدم هو صاحب التعليق
-        if ($comment->user_id !== auth()->id()) {
+        if ($comment->user_id !== Auth::id()) {
             abort(403, 'غير مسموح لك بتعديل هذا التعليق');
         }
 
@@ -52,7 +52,7 @@ class CommentController extends Controller
     // حذف تعليق
     public function destroy(Comment $comment)
     {
-        if (auth()->id() !== $comment->user_id && !auth()->user()->is_admin) {
+        if (Auth::id() !== $comment->user_id && !Auth::user()->is_admin) {
             abort(403, 'غير مسموح لك بحذف هذا التعليق');
         }
 
