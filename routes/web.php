@@ -6,6 +6,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReactionController;
+use App\Http\Controllers\ChatController;
+
 use Illuminate\Support\Facades\Route;
 
 // ----------------------
@@ -16,6 +18,11 @@ Route::middleware('auth')->group(function () {
     // Following List Route
     // ----------------------
     Route::get('/profile/following', [ProfileController::class, 'followingList'])->name('profile.following');
+
+
+
+    // chatttttttt message
+    
 
 
 
@@ -80,7 +87,16 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
+Route::middleware('auth')->group(function () {
+    Route::get('/chat/users', [ChatController::class, 'users'])
+    ->name('chat.users');
+   Route::get('/chat/{receiverId}', [ChatController::class, 'show']
+   )->name('chat.show');
+Route::get('/chat/messages/{receiverId}', [ChatController::class, 'messages']);
+Route::post('/chat/send', [ChatController::class, 'send']);
+Route::put('/chat/update/{id}', [ChatController::class, 'update']);
+Route::delete('/chat/delete/{id}', [ChatController::class, 'delete']);
+});
     
 // ----------------------
 // Home (default)

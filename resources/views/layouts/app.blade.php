@@ -764,6 +764,8 @@
             padding: 20px;
         }
     </style>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 <body>
 <!-- جسيمات الخلفية -->
@@ -777,9 +779,26 @@
         </button>
         <div class="logo">Mini Social</div>
     </div>
-    <div class="nav-icons">
-        <div class="nav-icon" onclick="toggleDarkMode()"><i class="bi bi-moon"></i></div>
-        <div class="nav-icon"><a href="/search"><i class="bi bi-search"></i></a></div>
+<div class="nav-icons">
+    <!-- زر الوضع الليلي -->
+    <div class="nav-icon" onclick="toggleDarkMode()">
+        <i class="bi bi-moon"></i>
+    </div>
+
+    <!-- زر البحث -->
+    <div class="nav-icon">
+        <a href="/search"><i class="bi bi-search"></i></a>
+    </div>
+
+@auth
+<div class="nav-icon">
+    <a href="{{ route('chat.users') }}">
+        <i class="bi bi-chat-dots-fill"></i>
+    </a>
+</div>
+@endauth
+
+    
     </div>
 </header>
 
@@ -1353,5 +1372,6 @@
         }, 100);
     }
 </script>
+
 </body>
 </html>
