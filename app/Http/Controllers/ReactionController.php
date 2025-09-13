@@ -1,87 +1,89 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Reaction;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReactionController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'reactable_type' => 'required|string|in:App\Models\Post,App\Models\Comment',
-            'reactable_id'   => 'required|integer',
-            'type'           => 'required|in:like,love,laugh,angry,sad',
-        ]);
-
-        $userId        = auth()->id();
-        $reactableType = $request->reactable_type;
-        $reactableId   = $request->reactable_id;
-
-        // دور على الريأكشن القديم
-        $reaction = Reaction::where([
-            'user_id'        => $userId,
-            'reactable_type' => $reactableType,
-            'reactable_id'   => $reactableId,
-        ])->first();
-
-        if ($reaction) {
-            if ($reaction->type === $request->type) {
-                // نفس النوع موجود، ما نعملش حاجة
-                $action = 'no_change';
-            } else {
-                $reaction->update(['type' => $request->type]);
-                $action = 'updated';
-            }
-        } else {
-            Reaction::create([
-                'user_id'        => $userId,
-                'reactable_type' => $reactableType,
-                'reactable_id'   => $reactableId,
-                'type'           => $request->type,
+        try {
+            $request->validate([
+                'reactable_type' => 'required|string',
+                'reactable_id' => 'required|integer',
+                'type' => 'required|in:like,love,haha,wow,sad,angry'
             ]);
-            $action = 'added';
+
+            $reactableType = $request->reactable_type;
+            $reactableId = $request->reactable_id;
+            $type = $request->type;
+            $userId = Auth::id();
+
+            // البحث عن ريأكشن موجود
+            $existingReaction = \DB::table('reactions')
+                ->where('user_id', $userId)
+                ->where('reactable_type', $reactableType)
+                ->where('reactable_id', $reactableId)
+                ->first();
+
+            if ($existingReaction) {
+                if ($existingReaction->type === $type) {
+                    // إذا كان نفس النوع، احذفه
+                    \DB::table('reactions')
+                        ->where('id', $existingReaction->id)
+                        ->delete();
+                    
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Reaction removed',
+                        'reaction' => null
+                    ]);
+                } else {
+                    // إذا كان نوع مختلف، حدثه
+                    \DB::table('reactions')
+                        ->where('id', $existingReaction->id)
+                        ->update([
+                            'type' => $type,
+                            'updated_at' => now()
+                        ]);
+                    
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Reaction updated',
+                        'reaction' => [
+                            'type' => $type,
+                            'user_id' => $userId
+                        ]
+                    ]);
+                }
+            } else {
+                // إنشاء ريأكشن جديد
+                $reactionId = \DB::table('reactions')->insertGetId([
+                    'user_id' => $userId,
+                    'reactable_type' => $reactableType,
+                    'reactable_id' => $reactableId,
+                    'type' => $type,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Reaction added',
+                    'reaction' => [
+                        'type' => $type,
+                        'user_id' => $userId
+                    ]
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
         }
-
-        // بعد العملية حول المستخدم لصفحة البوستات
-        return redirect()->route('posts.index')
-            ->with('message', "Reaction {$action} successfully!");
     }
-
-    public function destroy(Request $request): JsonResponse
-{
-    $request->validate([
-        'reactable_type' => 'required|string|in:App\Models\Post,App\Models\Comment',
-        'reactable_id'   => 'required|integer',
-    ]);
-
-    $userId = auth()->id();
-    $reactableType = $request->reactable_type;
-    $reactableId   = $request->reactable_id;
-
-    // جلب الريأكشن أولًا
-    $reaction = Reaction::where([
-        'user_id'        => $userId,
-        'reactable_type' => $reactableType,
-        'reactable_id'   => $reactableId,
-    ])->first();
-
-    if ($reaction) {
-        $reaction->delete();
-        $deleted = true;
-    } else {
-        $deleted = false;
-    }
-
-    $reactable = $reactableType::find($reactableId);
-
-    return response()->json([
-        'success'         => $deleted,
-        'reaction_counts' => $reactable ? $reactable->reaction_counts : [],
-        'total_reactions' => $reactable ? $reactable->total_reactions : 0,
-        'user_reaction'   => null,
-    ]);
-}
-
 }

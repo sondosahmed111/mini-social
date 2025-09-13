@@ -9,7 +9,7 @@
     {{-- زرار إنشاء منشور --}}
     @auth
     <div class="text-center mb-4 d-flex justify-content-center gap-2">
-        <a href="{{ route('posts.create') }}" class="btn btn-success">+ إنشاء منشور جديد</a>
+        <a href="{{ route('posts.create') }}" class="btn btn-primary">+ إنشاء منشور جديد</a>
     </div>
     @endauth
 
@@ -62,37 +62,62 @@
         @endif
 
         {{-- أزرار الريأكشن والتعليق --}}
-        <div class="post-actions d-flex align-items-center gap-3">
-            {{-- زر الريأكشنات --}}
-            <div class="reactions-wrapper">
+        <div class="post-actions d-flex align-items-center gap-3 border-top pt-3">
+            {{-- Post Actions with Facebook-style Reactions --}}
+            <div class="fb-reaction-container" data-post-id="{{ $post->id }}">
                 @php $userReaction = $post->reactions->where('user_id', auth()->id())->first(); @endphp
-
-                <button class="btn btn-outline-primary btn-sm">
+                
+                {{-- Main Reaction Button --}}
+                <div class="fb-main-reaction @if($userReaction) active reaction-{{ $userReaction->type }} @endif" id="main-reaction-{{ $post->id }}">
                     @if($userReaction)
-                        {{ $userReaction->type === 'like' ? '👍' : '' }}
-                        {{ $userReaction->type === 'love' ? '❤' : '' }}
-                        {{ $userReaction->type === 'haha' ? '😄' : '' }}
-                        {{ $userReaction->type === 'wow' ? '😯' : '' }}
-                        {{ $userReaction->type === 'sad' ? '😢' : '' }}
-                        {{ $userReaction->type === 'angry' ? '😡' : '' }}
-                        {{ ucfirst($userReaction->type) }}
+                        @switch($userReaction->type)
+                            @case('like') 
+                                <span style="font-size: 16px;">👍</span>
+                                <span>إعجاب</span> 
+                                @break
+                            @case('love') 
+                                <span style="font-size: 16px;">❤️</span>
+                                <span>حب</span> 
+                                @break
+                            @case('haha') 
+                                <span style="font-size: 16px;">😄</span>
+                                <span>ضحك</span> 
+                                @break
+                            @case('wow') 
+                                <span style="font-size: 16px;">😯</span>
+                                <span>دهشة</span> 
+                                @break
+                            @case('sad') 
+                                <span style="font-size: 16px;">😢</span>
+                                <span>حزن</span> 
+                                @break
+                            @case('angry') 
+                                <span style="font-size: 16px;">😡</span>
+                                <span>غضب</span> 
+                                @break
+                        @endswitch
                     @else
-                        <i class="bi bi-hand-thumbs-up"></i> إعجاب
+                        <i class="bi bi-hand-thumbs-up"></i>
+                        <span>إعجاب</span>
                     @endif
-                </button>
-
-                {{-- كل الريأكشنز تبان جنب بعض --}}
-                <div class="d-flex gap-2 mt-2">
-                    @foreach (['like'=>'👍','love'=>'❤','haha'=>'😄','wow'=>'😯','sad'=>'😢','angry'=>'😡'] as $type=>$emoji)
-                    <form method="POST" action="{{ route('reactions.store') }}">
-                        @csrf
-                        <input type="hidden" name="reactable_type" value="App\Models\Post">
-                        <input type="hidden" name="reactable_id" value="{{ $post->id }}">
-                        <input type="hidden" name="type" value="{{ $type }}">
-                        <button type="submit" class="btn btn-light btn-sm">
-                            {{ $emoji }} ({{ $post->reactions->where('type',$type)->count() }})
-                        </button>
-                    </form>
+                </div>
+                
+                {{-- Reactions Box --}}
+                <div class="fb-reactions-box">
+                    @foreach (['like'=>'👍','love'=>'❤️','haha'=>'😄','wow'=>'😯','sad'=>'😢','angry'=>'😡'] as $type=>$emoji)
+                        @php 
+                            $titles = [
+                                'like' => 'إعجاب',
+                                'love' => 'حب', 
+                                'haha' => 'ضحك',
+                                'wow' => 'دهشة',
+                                'sad' => 'حزن',
+                                'angry' => 'غضب'
+                            ];
+                        @endphp
+                        <div class="fb-reaction {{ $type }}" title="{{ $titles[$type] }}" data-reaction="{{ $type }}" data-emoji="{{ $emoji }}" data-title="{{ $titles[$type] }}">
+                            {{ $emoji }}
+                        </div>
                     @endforeach
                 </div>
             </div>
@@ -162,4 +187,90 @@
     <div class="text-center"><p>لا توجد منشورات حالياً</p></div>
     @endforelse
 </div>
+
+{{-- JavaScript للتعامل مع الـ Reactions --}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // التأكد من وجود CSRF token
+    const tokenElement = document.querySelector('meta[name="csrf-token"]');
+    if (!tokenElement) {
+        console.error('CSRF token not found');
+        return;
+    }
+    const token = tokenElement.getAttribute('content');
+    
+    // التعامل مع كلick على الريأكشنات
+    document.querySelectorAll('.fb-reaction').forEach(function(reactionBtn) {
+        reactionBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Reaction clicked:', this.getAttribute('data-reaction'));
+            
+            const container = this.closest('.fb-reaction-container');
+            const postId = container.getAttribute('data-post-id');
+            const reactionType = this.getAttribute('data-reaction');
+            const emoji = this.getAttribute('data-emoji');
+            const title = this.getAttribute('data-title');
+            
+            console.log('Data:', { postId, reactionType, emoji, title });
+            
+            // إرسال الـ AJAX request
+            fetch('{{ route("reactions.store") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    reactable_type: 'App\\Models\\Post',
+                    reactable_id: parseInt(postId),
+                    type: reactionType
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                if (data.success) {
+                    // تحديث الزر الرئيسي
+                    const mainReaction = document.getElementById('main-reaction-' + postId);
+                    
+                    if (!mainReaction) {
+                        console.error('Main reaction button not found');
+                        return;
+                    }
+                    
+                    // إزالة كل الكلاسات القديمة
+                    mainReaction.className = mainReaction.className.replace(/active|reaction-\w+/g, '');
+                    
+                    if (data.reaction) {
+                        // إضافة الكلاسات الجديدة
+                        mainReaction.classList.add('active', 'reaction-' + data.reaction.type);
+                        
+                        // تحديث المحتوى
+                        mainReaction.innerHTML = '<span style="font-size: 16px;">' + emoji + '</span><span>' + title + '</span>';
+                    } else {
+                        // العودة للحالة الافتراضية
+                        mainReaction.innerHTML = '<i class="bi bi-hand-thumbs-up"></i><span>إعجاب</span>';
+                    }
+                    
+                    console.log('Reaction updated successfully');
+                } else {
+                    console.error('Error from server:', data.message);
+                    alert('حدث خطأ: ' + (data.message || 'خطأ غير معروف'));
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert('حدث خطأ أثناء إضافة التفاعل: ' + error.message);
+            });
+        });
+    });
+});
+</script>
 @endsection

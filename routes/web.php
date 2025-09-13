@@ -7,23 +7,17 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\ChatController;
-
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 // ----------------------
 // Authenticated Users Routes
 // ----------------------
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {});
     // ----------------------
     // Following List Route
     // ----------------------
     Route::get('/profile/following', [ProfileController::class, 'followingList'])->name('profile.following');
-
-
-
-    // chatttttttt message
-    
-
 
 
     // ----------------------
@@ -35,18 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/delete-image', [ProfileController::class, 'destroyImage'])->name('profile.destroyImage');
     Route::get('/profile/{id}', [ProfileController::class, 'view'])->name('profile.view');
 
-
-
-
-
     // ----------------------
     // Follow Routes
     // ----------------------
     Route::post('/follow/{id}', [ProfileController::class, 'follow'])->name('profile.follow');
     Route::delete('/unfollow/{id}', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
 
-
-   
     // ----------------------
     // Posts Routes
     // ----------------------
@@ -57,7 +45,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-  
 
     // ----------------------
     // Reactions
@@ -65,12 +52,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/reactions', [ReactionController::class, 'store'])->name('reactions.store');
     Route::delete('/reactions', [ReactionController::class, 'destroy'])->name('reactions.destroy');
 
+    // ----------------------
+    // Notifications
+    // ----------------------
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::delete('/notifications', [NotificationController::class, 'clearAll'])->name('notifications.clearAll');
 
     // ----------------------
     // Other Pages
     // ----------------------
     Route::get('/search', [SearchController::class, 'search'])->name('search');
-    Route::get('/notifications', fn() => view('notifications'))->name('notifications');
     Route::get('/settings', fn() => view('settings'))->name('settings');
 
     // Logout
@@ -83,8 +76,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::put('/comments/{comment}/update', [CommentController::class,'update'])->name('comments.update');
-
 });
+
+//chatttttttt message
 
 
 Route::middleware('auth')->group(function () {
@@ -98,6 +92,7 @@ Route::put('/chat/update/{id}', [ChatController::class, 'update']);
 Route::delete('/chat/delete/{id}', [ChatController::class, 'delete']);
 });
     
+
 // ----------------------
 // Home (default)
 // ----------------------
