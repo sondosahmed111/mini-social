@@ -1,312 +1,246 @@
 @extends('layouts.app')
 
+@section('title', 'الرئيسية - MiniSocial')
+
+@push('styles')
+<style>
+    .post-image img {
+        max-height: 400px;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .hover-shadow:hover {
+        transform: scale(1.02);
+        cursor: pointer;
+    }
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #6c5ce7;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .comments-section {
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+    .comment {
+        margin-bottom: 8px;
+    }
+    .post-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+    }
+    .fb-reaction-container {
+        position: relative;
+    }
+    .fb-main-reaction {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+    }
+    .fb-reactions-box {
+        display: flex;
+        gap: 5px;
+        position: absolute;
+        top: -40px;
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+    }
+    .fb-main-reaction:hover .fb-reactions-box {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .fb-reaction {
+        font-size: 16px;
+        padding: 4px 6px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
+    .fb-reaction.selected {
+        opacity: 1;
+    }
+</style>
+@endpush
+
 @section('content')
-    <div class="container">
-        <div class="hero-section text-center mb-5 glass-card float-animation"
-            style="background: linear-gradient(135deg, rgba(74, 108, 250, 0.2), rgba(138, 43, 226, 0.2)); padding: 3rem; border-radius: 20px;">
-            <h1 class="display-4 fw-bold mb-3 glow-text animate__animated animate__fadeInDown">مرحبًا بك في MiniSocial</h1>
-            <p class="lead mb-4 animate__animated animate__fadeInUp">شارك أفكارك، تواصل مع الأصدقاء، واستكشف محتوى جديد</p>
-            <div class="animate__animated animate__fadeIn">
-                <a href="{{ route('register.view') }}" class="neo-btn me-2">انضم إلينا</a>
-                <a href="{{ route('login.view') }}" class="neo-btn"
-                    style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid var(--glass-border);">تسجيل
-                    الدخول</a>
-                <a href="/posts" class="neo-btn me-2 mt-2 mt-md-0">عرض المنشورات</a>
-            </div>
-        </div>
+<div class="container">
 
-        <!-- إنشاء منشور جديد -->
-        <div class="create-post-container fade-in">
-            <div class="post-header">
-                <div class="user-avatar glow-animation">م</div>
-                <div class="post-info">
-                    <h6>محمد أحمد</h6>
-                </div>
-            </div>
-
-            <textarea class="post-input" placeholder="ماذا يدور في ذهنك؟"></textarea>
-
-            <div class="media-preview" id="mediaPreview"></div>
-
-            <div class="media-actions">
-                <label for="imageUpload" class="media-btn">
-                    <i class="bi bi-image"></i> صورة
-                </label>
-                <label for="videoUpload" class="media-btn">
-                    <i class="bi bi-camera-video"></i> فيديو
-                </label>
-                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                <input type="file" id="videoUpload" accept="video/*" style="display: none;">
-            </div>
-
-            <button class="post-submit">نشر</button>
-        </div>
-
-        <!-- منشور 1 -->
-        <div class="glass-card fade-in">
-            <div class="post-header">
-                <div class="user-avatar glow-animation">م</div>
-                <div class="post-info">
-                    <h6>محمد أحمد</h6>
-                    <div class="post-time">
-                        <i class="bi bi-globe"></i> منذ 3 ساعات
-                    </div>
-                </div>
-                <i class="bi bi-three-dots" style="color: var(--text-muted); cursor: pointer;"></i>
-            </div>
-
-            <div class="post-content">
-                <p class="post-text">هذا مثال لمنشور. يمكن للمستخدمين الإعجاب والتعليق ومشاركة المنشورات هنا.</p>
-                <div class="post-media">
-                    <img src="https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-                        alt="صورة مثال">
-                </div>
-            </div>
-
-            <div class="post-stats">
-                <div class="reactions-count">
-                    <div class="reactions-icons">
-                        <div class="reaction-icon" style="background-color: #1877F2;"></div>
-                        <div class="reaction-icon" style="background-color: #F3425F;"></div>
-                    </div>
-                    <span>۱۲۳</span>
-                </div>
-                <div class="comments-count">٤ تعليقات</div>
-            </div>
-
-            <div class="post-actions">
-                <div class="fb-reaction-container">
-                    <div class="fb-main-reaction">
-                        <i class="bi bi-hand-thumbs-up"></i>
-                        <span>إعجاب</span>
-                    </div>
-                    <div class="fb-reactions-box">
-                        <div class="fb-reaction like" title="إعجاب" data-reaction="like">👍</div>
-                        <div class="fb-reaction love" title="حب" data-reaction="love">❤️</div>
-                        <div class="fb-reaction haha" title="ضحك" data-reaction="haha">😄</div>
-                        <div class="fb-reaction wow" title="دهشة" data-reaction="wow">😯</div>
-                        <div class="fb-reaction sad" title="حزن" data-reaction="sad">😢</div>
-                        <div class="fb-reaction angry" title="غضب" data-reaction="angry">😡</div>
-                    </div>
-                </div>
-
-                <div class="action-btn" onclick="toggleComments(this)">
-                    <i class="bi bi-chat"></i>
-                    <span>تعليق</span>
-                </div>
-
-                <div class="action-btn">
-                    <i class="bi bi-share"></i>
-                    <span>مشاركة</span>
-                </div>
-            </div>
-
-            <div class="comments-section">
-                <div class="comment">
-                    <div class="comment-avatar">س</div>
-                    <div class="comment-content">
-                        <div class="comment-author">سارة</div>
-                        <div class="comment-text">منشور رائع! 👏</div>
-                        <div class="comment-actions">
-                            <span class="comment-action" onclick="likeComment(this)">
-                                <i class="bi bi-hand-thumbs-up"></i> إعجاب
-                            </span>
-                            <span class="comment-action">رد</span>
-                            <span class="comment-action">منذ ساعة</span>
-                            <span class="comment-action">3</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="add-comment">
-                    <input type="text" class="comment-input" placeholder="اكتب تعليقًا...">
-                    <button class="comment-submit">نشر</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- منشور 2 -->
-        <div class="glass-card fade-in">
-            <div class="post-header">
-                <div class="user-avatar glow-animation">س</div>
-                <div class="post-info">
-                    <h6>سارة محمد</h6>
-                    <div class="post-time">
-                        <i class="bi bi-globe"></i> منذ 6 ساعات
-                    </div>
-                </div>
-                <i class="bi bi-three-dots" style="color: var(--text-muted); cursor: pointer;"></i>
-            </div>
-
-            <div class="post-content">
-                <p class="post-text">تجربة الفيديو في المنشورات الجديدة رائعة! يمكنني الآن مشاركة اللحظات المهمة بشكل أفضل.
-                </p>
-                <div class="post-media">
-                    <video controls>
-                        <source
-                            src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4"
-                            type="video/mp4">
-                        متصفحك لا يدعم تشغيل الفيديو
-                    </video>
-                </div>
-            </div>
-
-            <div class="post-stats">
-                <div class="reactions-count">
-                    <div class="reactions-icons">
-                        <div class="reaction-icon" style="background-color: #F7B928;"></div>
-                    </div>
-                    <span>٤٥</span>
-                </div>
-                <div class="comments-count">۲ تعليقات</div>
-            </div>
-
-            <div class="post-actions">
-                <div class="fb-reaction-container">
-                    <div class="fb-main-reaction">
-                        <i class="bi bi-hand-thumbs-up"></i>
-                        <span>إعجاب</span>
-                    </div>
-                    <div class="fb-reactions-box">
-                        <div class="fb-reaction like" title="إعجاب" data-reaction="like">👍</div>
-                        <div class="fb-reaction love" title="حب" data-reaction="love">❤️</div>
-                        <div class="fb-reaction haha" title="ضحك" data-reaction="haha">😄</div>
-                        <div class="fb-reaction wow" title="دهشة" data-reaction="wow">😯</div>
-                        <div class="fb-reaction sad" title="حزن" data-reaction="sad">😢</div>
-                        <div class="fb-reaction angry" title="غضب" data-reaction="angry">😡</div>
-                    </div>
-                </div>
-
-                <div class="action-btn" onclick="toggleComments(this)">
-                    <i class="bi bi-chat"></i>
-                    <span>تعليق</span>
-                </div>
-
-                <div class="action-btn">
-                    <i class="bi bi-share"></i>
-                    <span>مشاركة</span>
-                </div>
-            </div>
-
-            <div class="comments-section">
-                <div class="comment">
-                    <div class="comment-avatar">ع</div>
-                    <div class="comment-content">
-                        <div class="comment-author">علي</div>
-                        <div class="comment-text">الفيديو رائع! أتمنى أن أرى المزيد من هذه الميزة.</div>
-                        <div class="comment-actions">
-                            <span class="comment-action" onclick="likeComment(this)">
-                                <i class="bi bi-hand-thumbs-up"></i> إعجاب
-                            </span>
-                            <span class="comment-action">رد</span>
-                            <span class="comment-action">منذ ٣ ساعات</span>
-                            <span class="comment-action">7</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="add-comment">
-                    <input type="text" class="comment-input" placeholder="اكتب تعليقًا...">
-                    <button class="comment-submit">نشر</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- منشور 3 -->
-        <div class="glass-card fade-in">
-            <div class="post-header">
-                <div class="user-avatar glow-animation">ع</div>
-                <div class="post-info">
-                    <h6>علي حسين</h6>
-                    <div class="post-time">
-                        <i class="bi bi-globe"></i> منذ يوم واحد
-                    </div>
-                </div>
-                <i class="bi bi-three-dots" style="color: var(--text-muted); cursor: pointer;"></i>
-            </div>
-
-            <div class="post-content">
-                <p class="post-text">تجربة التصميم الزجاجي رائعة! أشعر وكأنني أستخدم تطبيقًا حديثًا يعمل بتقنيات متطورة.
-                </p>
-            </div>
-
-            <div class="post-stats">
-                <div class="reactions-count">
-                    <div class="reactions-icons">
-                        <div class="reaction-icon" style="background-color: #1877F2;"></div>
-                        <div class="reaction-icon" style="background-color: #F7B928;"></div>
-                        <div class="reaction-icon" style="background-color: #F3425F;"></div>
-                    </div>
-                    <span>۲۱۸</span>
-                </div>
-                <div class="comments-count">۱۲ تعليق</div>
-            </div>
-
-            <div class="post-actions">
-                <div class="fb-reaction-container">
-                    <div class="fb-main-reaction">
-                        <i class="bi bi-hand-thumbs-up"></i>
-                        <span>إعجاب</span>
-                    </div>
-                    <div class="fb-reactions-box">
-                        <div class="fb-reaction like" title="إعجاب" data-reaction="like">👍</div>
-                        <div class="fb-reaction love" title="حب" data-reaction="love">❤️</div>
-                        <div class="fb-reaction haha" title="ضحك" data-reaction="haha">😄</div>
-                        <div class="fb-reaction wow" title="دهشة" data-reaction="wow">😯</div>
-                        <div class="fb-reaction sad" title="حزن" data-reaction="sad">😢</div>
-                        <div class="fb-reaction angry" title="غضب" data-reaction="angry">😡</div>
-                    </div>
-                </div>
-
-                <div class="action-btn" onclick="toggleComments(this)">
-                    <i class="bi bi-chat"></i>
-                    <span>تعليق</span>
-                </div>
-
-                <div class="action-btn">
-                    <i class="bi bi-share"></i>
-                    <span>مشاركة</span>
-                </div>
-            </div>
-
-            <div class="comments-section">
-                <div class="comment">
-                    <div class="comment-avatar">م</div>
-                    <div class="comment-content">
-                        <div class="comment-author">محمد</div>
-                        <div class="comment-text">أوافقك الرأي! التصميم الزجاجي يعطي شعورًا بالعمق والحداثة.</div>
-                        <div class="comment-actions">
-                            <span class="comment-action" onclick="likeComment(this)">
-                                <i class="bi bi-hand-thumbs-up"></i> إعجاب
-                            </span>
-                            <span class="comment-action">رد</span>
-                            <span class="comment-action">منذ ٥ ساعات</span>
-                            <span class="comment-action">5</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="comment">
-                    <div class="comment-avatar">ل</div>
-                    <div class="comment-content">
-                        <div class="comment-author">ليلى</div>
-                        <div class="comment-text">الجسيمات في الخلفية جميلة جدًا! ✨</div>
-                        <div class="comment-actions">
-                            <span class="comment-action comment-liked" onclick="likeComment(this)">
-                                <i class="bi bi-hand-thumbs-up-fill"></i> أعجبك
-                            </span>
-                            <span class="comment-action">رد</span>
-                            <span class="comment-action">منذ ٣ ساعات</span>
-                            <span class="comment-action">8</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="add-comment">
-                    <input type="text" class="comment-input" placeholder="اكتب تعليقًا...">
-                    <button class="comment-submit">نشر</button>
-                </div>
-            </div>
+    @guest
+    <div class="hero-section text-center mb-5 glass-card float-animation"
+        style="background: linear-gradient(135deg, rgba(74, 108, 250, 0.2), rgba(138, 43, 226, 0.2)); padding: 3rem; border-radius: 20px;">
+        <h1 class="display-4 fw-bold mb-3 glow-text animate__animated animate__fadeInDown">مرحبًا بك في MiniSocial</h1>
+        <p class="lead mb-4 animate__animated animate__fadeInUp">
+            شارك أفكارك، تواصل مع الأصدقاء، واستكشف محتوى جديد
+        </p>
+        <div class="animate__animated animate__fadeIn">
+            <a href="{{ route('register.view') }}" class="neo-btn me-2">انضم إلينا</a>
+            <a href="{{ route('login.view') }}" class="neo-btn"
+                style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid var(--glass-border);">
+                تسجيل الدخول
+            </a>
         </div>
     </div>
+    @endguest
+
+    @auth
+    <div class="text-center mb-4 d-flex justify-content-center gap-2">
+        <a href="{{ route('posts.create') }}" class="neo-btn">+ إنشاء منشور جديد</a>
+    </div>
+    @endauth
+
+    {{-- عرض المنشورات --}}
+    @forelse ($posts as $post)
+    <div class="glass-card fade-in post-card mb-4 p-4" data-post-id="{{ $post->id }}">
+        {{-- رأس البوست --}}
+        <div class="d-flex align-items-center mb-3">
+            <div class="user-avatar glow-animation">
+                {{ substr($post->user->name ?? 'م', 0, 1) }}
+            </div>
+            <div class="ms-2">
+                <h6 class="mb-0">{{ $post->user->name ?? 'مستخدم' }}</h6>
+                <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
+            </div>
+
+            @if (auth()->check() && auth()->id() === $post->user_id)
+            <div class="ms-auto dropdown">
+                <button class="btn btn-link text-decoration-none" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a href="{{ route('posts.edit', $post->id) }}" class="dropdown-item"><i class="bi bi-pencil me-2"></i>تعديل</a></li>
+                    <li>
+                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash me-2"></i>حذف</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            @endif
+        </div>
+
+        {{-- محتوى البوست --}}
+        <h5>{{ $post->title }}</h5>
+        <p>{{ $post->description }}</p>
+
+        {{-- صورة البوست --}}
+        @if ($post->image)
+        <div class="post-image mb-3">
+            <img src="{{ asset('storage/' . $post->image) }}" alt="صورة المنشور" class="img-fluid rounded hover-shadow" loading="lazy">
+        </div>
+        @endif
+
+        {{-- أزرار الإعجاب والتعليق --}}
+        <div class="post-actions">
+            <div class="fb-reaction-container">
+                <div class="fb-main-reaction">
+                    <i class="bi bi-hand-thumbs-up"></i>
+                    <span>إعجاب</span>
+                    <div class="fb-reactions-box">
+                        @php
+                            $types = ['like'=>'👍','love'=>'❤️','haha'=>'😄','wow'=>'😯','sad'=>'😢','angry'=>'😡'];
+                        @endphp
+                        @foreach($types as $key => $emoji)
+                        <div class="fb-reaction {{ $post->reactions->where('user_id', auth()->id())->first()?->type === $key ? 'selected' : '' }}" data-reaction="{{ $key }}">
+                            {!! $emoji !!} <span class="reaction-count">{{ $post->reactions->where('type',$key)->count() }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-btn" onclick="toggleComments(this)">
+                <i class="bi bi-chat"></i><span>تعليق</span>
+            </div>
+            <div class="action-btn">
+                <i class="bi bi-share"></i><span>مشاركة</span>
+            </div>
+        </div>
+
+        {{-- قسم التعليقات --}}
+        <div class="comments mt-3">
+            @foreach ($post->comments as $comment)
+            <div class="comment p-2 mb-2 border rounded">
+                <strong>{{ $comment->user->name ?? 'مستخدم' }}:</strong>
+                <p>{{ $comment->body }}</p>
+            </div>
+            @endforeach
+
+            @auth
+            <form action="{{ route('comments.store', $post->id) }}" method="POST" class="d-flex gap-2 mt-2">
+                @csrf
+                <input type="text" name="body" class="form-control form-control-sm" placeholder="اكتب تعليقًا..." required>
+                <button type="submit" class="btn btn-primary btn-sm">نشر</button>
+            </form>
+            @endauth
+        </div>
+    </div>
+    @empty
+    <div class="text-center">
+        <p>لا توجد منشورات حالياً</p>
+    </div>
+    @endforelse
+
+</div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const reactions = document.querySelectorAll('.fb-reaction');
+
+    reactions.forEach(reaction => {
+        reaction.addEventListener('click', function() {
+            const postCard = this.closest('.post-card');
+            const postId = postCard.getAttribute('data-post-id');
+            const type = this.getAttribute('data-reaction');
+
+            fetch(`/posts/${postId}/react`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ type })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status){
+                    // تحديث العدادات
+                    postCard.querySelectorAll('.fb-reaction').forEach(r => {
+                        const rType = r.getAttribute('data-reaction');
+                        r.querySelector('.reaction-count').textContent = data.counts[rType] || 0;
+                        r.classList.remove('selected');
+                    });
+                    // تمييز الريأكشن الخاص بالمستخدم
+                    const selected = postCard.querySelector(`.fb-reaction[data-reaction="${data.user_reaction}"]`);
+                    if(selected) selected.classList.add('selected');
+                }
+            })
+            .catch(err => console.error(err));
+        });
+    });
+});
+</script>
+@endpush

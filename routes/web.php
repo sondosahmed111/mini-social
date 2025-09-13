@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\Route;
 // ----------------------
 // Authenticated Users Routes
 // ----------------------
-Route::middleware('auth')->group(function () {});
+Route::middleware('auth')->group(function () {
+
     // ----------------------
     // Following List Route
     // ----------------------
     Route::get('/profile/following', [ProfileController::class, 'followingList'])->name('profile.following');
-
 
     // ----------------------
     // Profile Routes
@@ -49,6 +49,8 @@ Route::middleware('auth')->group(function () {});
     // ----------------------
     // Reactions
     // ----------------------
+    Route::post('/posts/{post}/react', [PostController::class, 'react']);
+    Route::get('/posts/{post}/reactions-count', [PostController::class, 'reactionsCount']); 
     Route::post('/reactions', [ReactionController::class, 'store'])->name('reactions.store');
     Route::delete('/reactions', [ReactionController::class, 'destroy'])->name('reactions.destroy');
 
@@ -61,6 +63,24 @@ Route::middleware('auth')->group(function () {});
     Route::delete('/notifications', [NotificationController::class, 'clearAll'])->name('notifications.clearAll');
 
     // ----------------------
+    // Comment Routes
+    // ----------------------
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    // ----------------------
+    // Chat Routes
+    // ----------------------
+    Route::get('/chat/users', [ChatController::class, 'users'])->name('chat.users');
+    Route::get('/chat/{receiverId}', [ChatController::class, 'show'])->name('chat.show');
+    Route::get('/chat/messages/{receiverId}', [ChatController::class, 'messages']);
+    Route::post('/chat/send', [ChatController::class, 'send']);
+    Route::put('/chat/update/{id}', [ChatController::class, 'update']);
+    Route::delete('/chat/delete/{id}', [ChatController::class, 'delete']);
+
+    // ----------------------
     // Other Pages
     // ----------------------
     Route::get('/search', [SearchController::class, 'search'])->name('search');
@@ -68,30 +88,7 @@ Route::middleware('auth')->group(function () {});
 
     // Logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
-    // ----------------------
-    // Comment Routes
-    // ----------------------
-    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-    Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
-    Route::put('/comments/{comment}/update', [CommentController::class,'update'])->name('comments.update');
-
-
-//chatttttttt message
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/chat/users', [ChatController::class, 'users'])
-    ->name('chat.users');
-   Route::get('/chat/{receiverId}', [ChatController::class, 'show']
-   )->name('chat.show');
-Route::get('/chat/messages/{receiverId}', [ChatController::class, 'messages']);
-Route::post('/chat/send', [ChatController::class, 'send']);
-Route::put('/chat/update/{id}', [ChatController::class, 'update']);
-Route::delete('/chat/delete/{id}', [ChatController::class, 'delete']);
 });
-    
 
 // ----------------------
 // Home (default)

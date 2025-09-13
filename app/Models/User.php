@@ -62,6 +62,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reaction::class);
     }
+    // العلاقة مع البوستات من خلال الريأكشنز
+public function reactedPosts()
+{
+    return $this->belongsToMany(Post::class, 'reactions')
+                ->withPivot('type') // لو عندك عمود type للريأكشن (like, love, etc.)
+                ->withTimestamps();
+}
+
 
     /**
      * الناس اللي بيتابعوني

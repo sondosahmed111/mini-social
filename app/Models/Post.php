@@ -9,6 +9,8 @@ class Post extends Model
 {
     use HasFactory, Reactable;
 
+
+
     protected $fillable = [
         'title',
         'description',
@@ -18,7 +20,9 @@ class Post extends Model
 
     protected $appends = ['reaction_counts', 'total_reactions', 'user_reaction'];
 
-    protected $with = ['user'];
+
+    // نحمّل هذه العلاقات تلقائيًا
+    protected $with = ['user', 'reactions', 'comments.user'];
 
     public function user()
     {
@@ -28,5 +32,17 @@ class Post extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function reactions()
+    {
+        return $this->hasMany(Reaction::class);
+    }
+
+    public function reactors()
+    {
+        return $this->belongsToMany(User::class, 'reactions')
+                    ->withPivot('type')
+                    ->withTimestamps();
     }
 }

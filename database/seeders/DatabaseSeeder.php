@@ -14,6 +14,14 @@ class DatabaseSeeder extends Seeder
             LikeSeeder::class,
             FollowSeeder::class,
         ]);
+<<<<<<< HEAD
 
     }
+=======
+    
+    $this->call(UsersTableSeeder::class);
+
+>>>>>>> fca882307de5fcf6d0c78a5353103e51febc1915
 }
+    }
+
